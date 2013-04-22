@@ -157,7 +157,7 @@ TASK(ActionTask)
 			balance_control(
 				(F32)cmd_forward,
 				(F32)cmd_turn,
-				(F32)ecrobot_get_gyro_sensor(NXT_PORT_S4),
+				(F32)ecrobot_get_gyro_sensor(NXT_PORT_S1),
 				(F32)gyro_offset,
 				(F32)nxt_motor_get_count(NXT_PORT_C),
 				(F32)nxt_motor_get_count(NXT_PORT_B),
@@ -260,7 +260,7 @@ void RN_setting()
 void RN_set_gyro_start()
 {
 	/* ジャイロセンサの設定を始める */
-	if (ecrobot_get_touch_sensor(NXT_PORT_S1) == TRUE) {
+	if (ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE) {
 		ecrobot_sound_tone(880, 512, 30);
 
 		/* ジャイロセンサの値を計算するための開始時間をセットする */
@@ -273,7 +273,7 @@ void RN_set_gyro_start()
 void RN_set_gyro()
 {
 	/* ジャイロセンサの設定をする */
-	gyro_offset += (U32)ecrobot_get_gyro_sensor(NXT_PORT_S4);
+	gyro_offset += (U32)ecrobot_get_gyro_sensor(NXT_PORT_S1);
 	avg_cnt++;
 	
 	/* 1秒経過したら、ジャイロセンサのオフセット値の平均値を計算し、次の状態に遷移する。 */
@@ -290,7 +290,7 @@ void RN_set_gyro()
 void RN_set_gyro_end()
 {
 	/* バンパを離すと次の状態に遷移する */
-	if (ecrobot_get_touch_sensor(NXT_PORT_S1) != TRUE) {
+	if (ecrobot_get_touch_sensor(NXT_PORT_S4) != TRUE) {
 		setting_mode = RN_SETTINGMODE_OK;
 	}
 }
@@ -299,7 +299,7 @@ void RN_set_gyro_end()
 void RN_set_ok()
 {	
 	/* スタート位置にロボットを置き、バンパを押すと次の状態に遷移する。 */
-	if (ecrobot_get_touch_sensor(NXT_PORT_S1) == TRUE) {
+	if (ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE) {
 		ecrobot_sound_tone(880, 512, 30);
 		setting_mode = RN_SETTINGMODE_OK_END;
 	}
@@ -309,7 +309,7 @@ void RN_set_ok()
 void RN_set_ok_end()
 {
 	/* バンパを離すと次の状態に遷移する(設定モードを終了する）*/
-	if (ecrobot_get_touch_sensor(NXT_PORT_S1) != TRUE) {
+	if (ecrobot_get_touch_sensor(NXT_PORT_S4) != TRUE) {
 		ecrobot_sound_tone(880, 512, 30);
 		setting_mode = RN_SETTINGMODE_END;
 	}
