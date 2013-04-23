@@ -11,8 +11,9 @@
 /*
  * 閾値
 */
-#define LIGHT_THRESHOLD 600
+//#define LIGHT_THRESHOLD 600
 
+int light_threshold = 600;
 /*
  * システム全体の状態
  */
@@ -280,6 +281,14 @@ void RN_set_gyro()
 	if ((ecrobot_get_systick_ms() - cal_start_time) >= 1000U) {
 		gyro_offset /= avg_cnt;
 
+		ecrobot_sound_tone(440U, 500U, 30U);
+
+		setting_mode = RN_SETTINGMODE_GYRO_END;
+	}
+
+	if ((ecrobot_get_systick_ms() - cal_start_time) >= 1000U) {
+	
+			
 		ecrobot_sound_tone(440U, 500U, 30U);
 
 		setting_mode = RN_SETTINGMODE_GYRO_END;
