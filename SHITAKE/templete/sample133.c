@@ -14,6 +14,8 @@
 //#define LIGHT_THRESHOLD 600
 
 //int light_threshold = 600;
+
+static int light_white=0,light_black=0;
 /*
  * システム全体の状態
  */
@@ -32,7 +34,9 @@ typedef enum{
 	RN_SETTINGMODE_GYRO_END,
 	RN_SETTINGMODE_OK,
 	RN_SETTINGMODE_OK_END,
-	RN_SETTINGMODE_END
+	RN_SETTINGMODE_END,
+	RN_SETTING_BLACK,
+	RN_SETTING_WHITE
 } RN_SETTINGMODE;
 
 
@@ -67,6 +71,8 @@ void RN_set_gyro();
 void RN_set_gyro_end();
 void RN_set_ok();
 void RN_set_ok_end();
+void RN_set_color_black();
+void RN_set_color_white();
 
 
 /*
@@ -199,14 +205,16 @@ TASK(DisplayTask)
  */
 TASK(ActionTask2)
 {
-
+	static int color_gray=0;
 	static const float Kp = 0.5;
 	static float hensa = 0;
 	static float speed = 0;
 
 	cmd_forward = 50;
 	
-	hensa = LIGHT_THRESHOLD - ecrobot_get_light_sensor(NXT_PORT_S3);
+	color_gray=(light_white + light_black)/2;
+
+	hensa = color_gray - ecrobot_get_light_sensor(NXT_PORT_S3);
 	/* 白いと＋値 */
 	/* 黒いと－値 */
 
@@ -252,6 +260,14 @@ void RN_setting()
 		case (RN_SETTINGMODE_END):
 			runner_mode = RN_MODE_CONTROL;
 			break;
+
+		case (RN_SETTING_BLACK):
+			RN_set_color_black();
+			break;
+
+		case (RN_SETTING_WHITE):
+			RN_set_color_white();
+			break;
 		default:
 			break;
 	}
@@ -269,6 +285,8 @@ void RN_set_gyro_start()
 		setting_mode = RN_SETTINGMODE_GYRO;
 	}
 }
+
+
 
 
 void RN_set_gyro()
@@ -300,6 +318,26 @@ void RN_set_gyro_end()
 {
 	/* バンパを離すと次の状態に遷移する */
 	if (ecrobot_get_touch_sensor(NXT_PORT_S4) != TRUE) {
+		setting_mode = RN_SETTING_BLACK;
+	}
+}
+
+void RN_set_color_black()
+{
+	if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE){
+		light_black=ecrobot_get_light_sensor(NXT_PORT_S3);
+		ecrobot_sound_tone(880, 512, 30);
+		systick_wait_ms(500);
+		setting_mode = RN_SETTING_WHITE;
+	}
+}
+
+void RN_set_color_white()
+{
+	if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE){
+		light_white=ecrobot_get_light_sensor(NXT_PORT_S3);
+		ecrobot_sound_tone(880, 512, 30);
+		systick_wait_ms(500);
 		setting_mode = RN_SETTINGMODE_OK;
 	}
 }
