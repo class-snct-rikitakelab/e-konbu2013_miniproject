@@ -13,7 +13,7 @@
 */
 //#define LIGHT_THRESHOLD 600
 
-int light_threshold = 600;
+//int light_threshold = 600;
 /*
  * システム全体の状態
  */
