@@ -232,7 +232,7 @@ TASK(DisplayTask)
 TASK(ActionTask2)
 {
 	
-	static const float Kp = 1.0;
+	static const float Kp = 10.0;
 	//static float hensa = 0;
 	static float speed = 0;
 
@@ -240,7 +240,7 @@ TASK(ActionTask2)
 	
 	color_gray=(light_white + light_black)/2;
 
-	hensa = (color_gray+50) - ecrobot_get_light_sensor(NXT_PORT_S3);
+	hensa = (color_gray) - ecrobot_get_light_sensor(NXT_PORT_S3);
 	//hensa = LIGHT_THRESHOLD - ecrobot_get_light_sensor(NXT_PORT_S3);
 	/* 白いと＋値 */
 	/* 黒いと－値 */
@@ -263,7 +263,7 @@ TASK(ActionTask2)
 
 TASK(LogTask)
 {
-	logSend(0,0,gyro_offset,hensa,light_black,light_white,0,0);		//ログ取り
+	logSend(0,0,gyro_offset,hensa,pwm_l,pwm_r,0,0);		//ログ取り
 	TerminateTask();
 }
 
