@@ -7,6 +7,9 @@
  */
 
 #include "sample133.h"
+#include "MoveDistance.h"
+#include "Factory.h"
+
 
 /*
  * 閾値
@@ -100,6 +103,10 @@ const char target_subsystem_name[] = "OSEK Sample133";
 void ecrobot_device_initialize(void)
 {
 	ecrobot_set_light_sensor_active(NXT_PORT_S3);
+	ecrobot_set_motor_rev(NXT_PORT_A,0);
+	ecrobot_set_motor_rev(NXT_PORT_B,0);
+	ecrobot_set_motor_rev(NXT_PORT_C,0);
+
 }
 
 
@@ -216,6 +223,12 @@ TASK(ActionTask2)
 	}else if (cmd_turn > 100) {
 		cmd_turn = 100;
 	}
+
+	if(MoveDistance_detect_move_distance(&moveDistance)){
+		ecrobot_sound_tone(440U, 500U,70U);
+
+	}
+	cmd_turn = 0;
 
 	/* 自タスクの終了 */
 	/* 具体的には，自タスクを実行状態から休止状態に移行させ，*/
