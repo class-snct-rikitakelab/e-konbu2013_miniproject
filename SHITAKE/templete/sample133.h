@@ -6,4 +6,8 @@
 #include "ecrobot_interface.h"
 #include "balancer.h"
 
+#include "Factory.h"
+
+#include "MoveDistance.h"
+
 #endif

@@ -36,9 +36,24 @@
     <ClCompile Include="sample133.c">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Calibration.c">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveDistance.c">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sample133.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Calibration.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveDistance.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="factory.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
   </ItemGroup>

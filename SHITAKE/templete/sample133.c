@@ -11,7 +11,7 @@
 /*
  * 臒l
 */
-//#define LIGHT_THRESHOLD 600
+#define LIGHT_THRESHOLD 600
 
 int light_threshold = 600;
 /*

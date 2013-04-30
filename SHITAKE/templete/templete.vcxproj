@@ -53,9 +53,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="balancer_param.c" />
+    <ClCompile Include="Calibration.c" />
+    <ClCompile Include="MoveDistance.c" />
     <ClCompile Include="sample133.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Calibration.h" />
+    <ClInclude Include="factory.h" />
+    <ClInclude Include="MoveDistance.h" />
     <ClInclude Include="sample133.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
