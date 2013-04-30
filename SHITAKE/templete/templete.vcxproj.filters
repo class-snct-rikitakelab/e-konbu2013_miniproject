@@ -17,29 +17,35 @@
   <ItemGroup>
     <None Include="readme.txt" />
     <None Include="Makefile">
-      <Filter>ソース ファイル</Filter>
-    </None>
-    <None Include="prog.oil">
-      <Filter>ソース ファイル</Filter>
+      <Filter>リソース ファイル</Filter>
     </None>
     <None Include="mk.cmd">
-      <Filter>ソース ファイル</Filter>
+      <Filter>リソース ファイル</Filter>
     </None>
     <None Include="mk_clean.cmd">
-      <Filter>ソース ファイル</Filter>
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="prog.oil">
+      <Filter>リソース ファイル</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="balancer_param.c">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="sample133.c">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="logSend.c">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="balancer_param.c">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="logSend.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="sample133.h">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

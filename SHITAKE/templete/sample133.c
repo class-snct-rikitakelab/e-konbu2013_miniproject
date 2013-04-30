@@ -11,11 +11,34 @@
 /*
  * 閾値
 */
-//#define LIGHT_THRESHOLD 600
+#define LIGHT_THRESHOLD 600
+
+
+static float hensa = 0;
+
+/* 自己位置同定用　変数宣言 */
+float d_theta_r;					/* 現在の右モータ回転角度 [rad] */
+float d_theta_l;					/* 現在の左モータ回転角度 [rad] */
+static float d_theta_r_t;			/* 1 ステップ前の右モータ回転角度 [rad] */
+static float d_theta_l_t;			/* 1 ステップ前の左モータ回転角度 [rad] */
+float velocity_r;					/* 右車輪移動速度 [cm/s] */
+float velocity_l;					/* 左車輪移動速度 [cm/s] */
+float velocity;						/* ロボットの移動速度 [cm/s] */
+float omega;						/* ロボットの回転角角度 [rad/s] */
+//static float position_x = POSITION_X0; /* ロボットの x 座標 */
+//static float position_y = POSITION_Y0; /* ロボットの y 座標 */
+//static float theta = THETA_0;		/* ロボットの姿勢角 */
+unsigned short int l_val;			/* 光センサ値 */
+int temp_x;							/* ロボットの x 座標（出力処理用） */
+int temp_y;							/* ロボットの y 座標（出力処理用） */
+static double omega_r;			//右車輪の回転角速度
+static double omega_l;			//左車輪の回転角速度
+unsigned char tx_buf[256]; /* 送信バッファ */
+
 
 //int light_threshold = 600;
 
-static int light_white=0,light_black=0;
+int light_white,light_black,color_gray;
 /*
  * システム全体の状態
  */
@@ -92,12 +115,13 @@ DeclareCounter(SysTimerCnt);
 DeclareTask(ActionTask);
 DeclareTask(ActionTask2);
 DeclareTask(DisplayTask);
+DeclareTask(LogTask);
 
 
 /*
  *液晶ディスプレイに表示するシステム名設定
  */
-const char target_subsystem_name[] = "OSEK Sample133";
+const char target_subsystem_name[] = "SHITAKE";
 
 
 /*
@@ -106,6 +130,7 @@ const char target_subsystem_name[] = "OSEK Sample133";
 void ecrobot_device_initialize(void)
 {
 	ecrobot_set_light_sensor_active(NXT_PORT_S3);
+	ecrobot_init_bt_slave("LEJOS-OSEK");
 }
 
 
@@ -117,6 +142,7 @@ void ecrobot_device_terminate(void)
 	ecrobot_set_motor_speed(NXT_PORT_B, 0);
 	ecrobot_set_motor_speed(NXT_PORT_C, 0);
 	ecrobot_set_light_sensor_inactive(NXT_PORT_S3);
+	ecrobot_term_bt_connection();
 }
 
 
@@ -205,16 +231,17 @@ TASK(DisplayTask)
  */
 TASK(ActionTask2)
 {
-	static int color_gray=0;
-	static const float Kp = 0.5;
-	static float hensa = 0;
+	
+	static const float Kp = 1.0;
+	//static float hensa = 0;
 	static float speed = 0;
 
-	cmd_forward = 50;
+	cmd_forward = 30;
 	
 	color_gray=(light_white + light_black)/2;
 
-	hensa = color_gray - ecrobot_get_light_sensor(NXT_PORT_S3);
+	hensa = (color_gray+50) - ecrobot_get_light_sensor(NXT_PORT_S3);
+	//hensa = LIGHT_THRESHOLD - ecrobot_get_light_sensor(NXT_PORT_S3);
 	/* 白いと＋値 */
 	/* 黒いと－値 */
 
@@ -228,8 +255,18 @@ TASK(ActionTask2)
 	/* 自タスクの終了 */
 	/* 具体的には，自タスクを実行状態から休止状態に移行させ，*/
 	/* タスクの終了時に行うべき処理を行う */
+	//logSend(0,0,0,hensa,0,0,0,0);
+
+
 	TerminateTask();
 }
+
+TASK(LogTask)
+{
+	logSend(0,0,gyro_offset,hensa,light_black,light_white,0,0);		//ログ取り
+	TerminateTask();
+}
+
 
 /*
  *プライベート関数の実装
@@ -324,22 +361,45 @@ void RN_set_gyro_end()
 
 void RN_set_color_black()
 {
-	if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE){
+	/*if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE){
 		light_black=ecrobot_get_light_sensor(NXT_PORT_S3);
 		ecrobot_sound_tone(880, 512, 30);
 		systick_wait_ms(500);
 		setting_mode = RN_SETTING_WHITE;
+	}*/
+	while(1){
+		if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE)
+		{
+			ecrobot_sound_tone(906, 512, 30);
+			light_black=ecrobot_get_light_sensor(NXT_PORT_S3);
+			systick_wait_ms(500);
+			break;
+		}
 	}
+	setting_mode = RN_SETTING_WHITE;
+
 }
 
 void RN_set_color_white()
 {
-	if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE){
+	/*if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE){
 		light_white=ecrobot_get_light_sensor(NXT_PORT_S3);
 		ecrobot_sound_tone(880, 512, 30);
 		systick_wait_ms(500);
 		setting_mode = RN_SETTINGMODE_OK;
+	}*/
+
+	while(1){
+		if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE)
+		{
+			ecrobot_sound_tone(906, 512, 30);
+			light_white=ecrobot_get_light_sensor(NXT_PORT_S3);
+			systick_wait_ms(500);
+			break;
+		}
 	}
+	setting_mode = RN_SETTINGMODE_OK;
+
 }
 
 
