@@ -257,6 +257,8 @@ TASK(ActionTask2)
 	/* タスクの終了時に行うべき処理を行う */
 	//logSend(0,0,0,hensa,0,0,0,0);
 
+	BLNU_turn(cmd_turn);
+
 
 	TerminateTask();
 }

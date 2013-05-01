@@ -39,6 +39,9 @@
     <ClCompile Include="balancer_param.c">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="BalancerUnit.c">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="logSend.h">
@@ -47,5 +50,16 @@
     <ClInclude Include="sample133.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="BalancerUnit.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="shitake.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

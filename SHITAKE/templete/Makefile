@@ -14,6 +14,7 @@ USER_LIB = nxtway_gs_balancer
 TARGET_SOURCES := \
 	balancer_param.c \
 	logSend.c \
+	BalancerUnit.c \
 	sample133.c
 
 TOPPERS_OSEK_OIL_SOURCE := ./prog.oil
