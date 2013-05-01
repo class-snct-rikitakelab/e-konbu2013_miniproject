@@ -55,6 +55,7 @@
     <ClCompile Include="balancer_param.c" />
     <ClCompile Include="Calibration.c" />
     <ClCompile Include="MoveDistance.c" />
+    <ClCompile Include="MoveDistanceTest.c" />
     <ClCompile Include="sample133.c" />
   </ItemGroup>
   <ItemGroup>
