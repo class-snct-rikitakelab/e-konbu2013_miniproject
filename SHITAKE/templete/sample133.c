@@ -232,11 +232,11 @@ TASK(DisplayTask)
 TASK(ActionTask2)
 {
 	
-	static const float Kp = 10.0;
+	static const float Kp = 5.0;
 	//static float hensa = 0;
 	static float speed = 0;
 
-	cmd_forward = 30;
+	cmd_forward = 50;
 	
 	color_gray=(light_white + light_black)/2;
 
@@ -265,7 +265,7 @@ TASK(ActionTask2)
 
 TASK(LogTask)
 {
-	logSend(0,0,gyro_offset,hensa,pwm_l,pwm_r,0,0);		//ÉçÉOéÊÇË
+	logSend(0,0,gyro_offset,cmd_turn,hensa,0,0,0);		//ÉçÉOéÊÇË
 	TerminateTask();
 }
 
