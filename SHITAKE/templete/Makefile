@@ -16,8 +16,8 @@ TARGET_SOURCES := \
 	MoveDistance.c \
 	logSend.c \
 	BalancerUnit.c \
-	sample133.c
-
+	MoveDistanceTest.c \
+	#sample133.c \
 
 TOPPERS_OSEK_OIL_SOURCE := ./prog.oil
 

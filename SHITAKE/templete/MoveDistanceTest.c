@@ -1,7 +1,7 @@
 /*
- * sample133.c
+ * sample08.c
  *
- * バランスして立ち、ライントレースする、PID制御
+ * バランスして立つ
  * (c) COPYRIGHT 2010 Afrel., Inc.
  * All rights reserved
  */
@@ -10,41 +10,6 @@
 #include "MoveDistance.h"
 #include "Factory.h"
 
-
-
-
-static float hensa = 0;
-
-/* 自己位置同定用　変数宣言 */
-float d_theta_r;					/* 現在の右モータ回転角度 [rad] */
-float d_theta_l;					/* 現在の左モータ回転角度 [rad] */
-static float d_theta_r_t;			/* 1 ステップ前の右モータ回転角度 [rad] */
-static float d_theta_l_t;			/* 1 ステップ前の左モータ回転角度 [rad] */
-float velocity_r;					/* 右車輪移動速度 [cm/s] */
-float velocity_l;					/* 左車輪移動速度 [cm/s] */
-float velocity;						/* ロボットの移動速度 [cm/s] */
-float omega;						/* ロボットの回転角角度 [rad/s] */
-//static float position_x = POSITION_X0; /* ロボットの x 座標 */
-//static float position_y = POSITION_Y0; /* ロボットの y 座標 */
-//static float theta = THETA_0;		/* ロボットの姿勢角 */
-unsigned short int l_val;			/* 光センサ値 */
-int temp_x;							/* ロボットの x 座標（出力処理用） */
-int temp_y;							/* ロボットの y 座標（出力処理用） */
-static double omega_r;			//右車輪の回転角速度
-static double omega_l;			//左車輪の回転角速度
-unsigned char tx_buf[256]; /* 送信バッファ */
-
-
-
-int light_white,light_black,color_gray;
-/*
- * システム全体の状態
- */
-typedef enum{
-	RN_MODE_INIT, 		/* system initialize mode */
-	RN_MODE_CONTROL,		/* control mode */
-	RN_MODE_STOP /* control mode */
-} RN_MODE;
 
 
 /*
@@ -56,10 +21,18 @@ typedef enum{
 	RN_SETTINGMODE_GYRO_END,
 	RN_SETTINGMODE_OK,
 	RN_SETTINGMODE_OK_END,
-	RN_SETTINGMODE_END,
-	RN_SETTING_BLACK,
-	RN_SETTING_WHITE
+	RN_SETTINGMODE_END
 } RN_SETTINGMODE;
+
+/*
+ * システム全体の状態
+ */
+typedef enum{
+	RN_MODE_INIT, 		/* system initialize mode */
+	RN_MODE_CONTROL,
+	RN_MODE_STOP /* control mode */
+} RN_MODE;
+
 
 
 /*
@@ -93,8 +66,6 @@ void RN_set_gyro();
 void RN_set_gyro_end();
 void RN_set_ok();
 void RN_set_ok_end();
-void RN_set_color_black();
-void RN_set_color_white();
 
 
 /*
@@ -114,13 +85,12 @@ DeclareCounter(SysTimerCnt);
 DeclareTask(ActionTask);
 DeclareTask(ActionTask2);
 DeclareTask(DisplayTask);
-DeclareTask(LogTask);
 
 
 /*
  *液晶ディスプレイに表示するシステム名設定
  */
-const char target_subsystem_name[] = "SHITAKE";
+const char target_subsystem_name[] = "OSEK Sample133";
 
 
 /*
@@ -133,7 +103,6 @@ void ecrobot_device_initialize(void)
 	ecrobot_set_motor_rev(NXT_PORT_B,0);
 	ecrobot_set_motor_rev(NXT_PORT_C,0);
 
-	ecrobot_init_bt_slave("LEJOS-OSEK");
 }
 
 
@@ -145,7 +114,6 @@ void ecrobot_device_terminate(void)
 	ecrobot_set_motor_speed(NXT_PORT_B, 0);
 	ecrobot_set_motor_speed(NXT_PORT_C, 0);
 	ecrobot_set_light_sensor_inactive(NXT_PORT_S3);
-	ecrobot_term_bt_connection();
 }
 
 
@@ -202,6 +170,28 @@ TASK(ActionTask)
 				&pwm_r);
 			nxt_motor_set_speed(NXT_PORT_C, pwm_l, 1);
 			nxt_motor_set_speed(NXT_PORT_B, pwm_r, 1);
+
+			if( MoveDistance_detect_move_distance(&moveDistance) > 30){
+				ecrobot_sound_tone(440,100,50);
+				runner_mode = RN_MODE_STOP;
+			}
+			break;
+
+		case (RN_MODE_STOP) :
+			cmd_forward = 0;
+			cmd_turn = 0;
+			balance_control(
+				(F32)cmd_forward,
+				(F32)cmd_turn,
+				(F32)ecrobot_get_gyro_sensor(NXT_PORT_S1),
+				(F32)gyro_offset,
+				(F32)nxt_motor_get_count(NXT_PORT_C),
+				(F32)nxt_motor_get_count(NXT_PORT_B),
+				(F32)ecrobot_get_battery_voltage(),
+				&pwm_l,
+				&pwm_r);
+			nxt_motor_set_speed(NXT_PORT_C, pwm_l, 1);
+			nxt_motor_set_speed(NXT_PORT_B, pwm_r, 1);
 			break;
 
 		default:
@@ -234,16 +224,13 @@ TASK(DisplayTask)
  */
 TASK(ActionTask2)
 {
-	
-	static const float Kp = 5.0;
-	//static float hensa = 0;
+
+	static const float Kp = 0.5;
+	static float hensa = 0;
 	static float speed = 0;
 
 	cmd_forward = 50;
-	
-	color_gray=(light_white + light_black)/2;
-
-	hensa = (color_gray) - ecrobot_get_light_sensor(NXT_PORT_S3);
+	cmd_turn = 0;
 	//hensa = LIGHT_THRESHOLD - ecrobot_get_light_sensor(NXT_PORT_S3);
 	/* 白いと＋値 */
 	/* 黒いと－値 */
@@ -258,20 +245,8 @@ TASK(ActionTask2)
 	/* 自タスクの終了 */
 	/* 具体的には，自タスクを実行状態から休止状態に移行させ，*/
 	/* タスクの終了時に行うべき処理を行う */
-	//logSend(0,0,0,hensa,0,0,0,0);
-
-	BLNU_turn(cmd_turn);
-
-
 	TerminateTask();
 }
-
-TASK(LogTask)
-{
-	logSend(0,0,gyro_offset,cmd_turn,hensa,0,0,0);		//ログ取り
-	TerminateTask();
-}
-
 
 /*
  *プライベート関数の実装
@@ -302,14 +277,6 @@ void RN_setting()
 		case (RN_SETTINGMODE_END):
 			runner_mode = RN_MODE_CONTROL;
 			break;
-
-		case (RN_SETTING_BLACK):
-			RN_set_color_black();
-			break;
-
-		case (RN_SETTING_WHITE):
-			RN_set_color_white();
-			break;
 		default:
 			break;
 	}
@@ -327,8 +294,6 @@ void RN_set_gyro_start()
 		setting_mode = RN_SETTINGMODE_GYRO;
 	}
 }
-
-
 
 
 void RN_set_gyro()
@@ -360,51 +325,8 @@ void RN_set_gyro_end()
 {
 	/* バンパを離すと次の状態に遷移する */
 	if (ecrobot_get_touch_sensor(NXT_PORT_S4) != TRUE) {
-		setting_mode = RN_SETTING_BLACK;
-	}
-}
-
-void RN_set_color_black()
-{
-	/*if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE){
-		light_black=ecrobot_get_light_sensor(NXT_PORT_S3);
-		ecrobot_sound_tone(880, 512, 30);
-		systick_wait_ms(500);
-		setting_mode = RN_SETTING_WHITE;
-	}*/
-	while(1){
-		if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE)
-		{
-			ecrobot_sound_tone(906, 512, 30);
-			light_black=ecrobot_get_light_sensor(NXT_PORT_S3);
-			systick_wait_ms(500);
-			break;
-		}
-	}
-	setting_mode = RN_SETTING_WHITE;
-
-}
-
-void RN_set_color_white()
-{
-	/*if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE){
-		light_white=ecrobot_get_light_sensor(NXT_PORT_S3);
-		ecrobot_sound_tone(880, 512, 30);
-		systick_wait_ms(500);
 		setting_mode = RN_SETTINGMODE_OK;
-	}*/
-
-	while(1){
-		if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE)
-		{
-			ecrobot_sound_tone(906, 512, 30);
-			light_white=ecrobot_get_light_sensor(NXT_PORT_S3);
-			systick_wait_ms(500);
-			break;
-		}
 	}
-	setting_mode = RN_SETTINGMODE_OK;
-
 }
 
 
