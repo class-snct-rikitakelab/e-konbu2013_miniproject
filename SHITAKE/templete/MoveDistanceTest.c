@@ -349,4 +349,9 @@ void RN_set_ok_end()
 	}
 }
 
+TASK(LogTask)
+{
+	logSend(0,0,gyro_offset,0,0,0,0,0);		//ÉçÉOéÊÇË
+	TerminateTask();
+}
 /******************************** END OF FILE ********************************/
