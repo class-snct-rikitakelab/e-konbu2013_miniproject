@@ -1,8 +1,9 @@
 #include "MoveDistance.h"
 
+ //走行距離計測開始地点でのモータ回転角保存用
+static S16 revL_buf,revR_buf;
 
-
-int MoveDistance_detect_move_distance(MoveDistance *this_MoveDistance)
+int MoveDistance_detect_move_distance()
 {
 	int result=0;
 	S16 revL=0,revR=0;
@@ -11,18 +12,18 @@ int MoveDistance_detect_move_distance(MoveDistance *this_MoveDistance)
 	revR = nxt_motor_get_count(NXT_PORT_B);	
 
 	
-	move_distance = CIRCUMFERENCE/360.0 * (((revL -this_MoveDistance->revL_buf) + (revR-this_MoveDistance-> revR_buf)) /2.0);
+	move_distance = CIRCUMFERENCE/360.0 * (((revL - revL_buf) + (revR- revR_buf)) /2.0);
 	return move_distance;
 }
 
-void MoveDistance_init(MoveDistance *this_MoveDistance)
+void MoveDistance_create()
 {
-	this_MoveDistance-> revL_buf=0;
-	this_MoveDistance-> revR_buf=0;
+	 revL_buf=0;
+	 revR_buf=0;
 }
 
-void MoveDistance_reset_move_distance_measurement(MoveDistance *this_MoveDistance)
+static void MoveDistance_reset_move_distance_measurement()
 {
-	this_MoveDistance-> revL_buf=nxt_motor_get_count(NXT_PORT_C);
-	this_MoveDistance-> revR_buf=nxt_motor_get_count(NXT_PORT_B);
+	revL_buf=nxt_motor_get_count(NXT_PORT_C);
+	revR_buf=nxt_motor_get_count(NXT_PORT_B);
 }

@@ -8,7 +8,6 @@
 
 #include "sample133.h"
 #include "MoveDistance.h"
-#include "Factory.h"
 
 
 
@@ -171,7 +170,7 @@ TASK(ActionTask)
 			nxt_motor_set_speed(NXT_PORT_C, pwm_l, 1);
 			nxt_motor_set_speed(NXT_PORT_B, pwm_r, 1);
 
-			if( MoveDistance_detect_move_distance(&moveDistance) > 30){
+			if( MoveDistance_detect_move_distance() > 30){
 				ecrobot_sound_tone(440,100,50);
 				runner_mode = RN_MODE_STOP;
 			}

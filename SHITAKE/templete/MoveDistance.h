@@ -14,21 +14,19 @@
 #define CIRCUMFERENCE 25.8			//車輪の円周
 
 
+int MoveDistance_detect_move_distance();
 
-//移動距離クラス
-
-typedef struct {
-	S16 revL_buf,revR_buf; //走行距離計測開始地点でのモータ回転角保存用
-}MoveDistance;
-
-int detect_move_distance();
-
-void MoveDistance_init(MoveDistance *this_MoveDistance);	
-
-//現在のモータ回転角を保存
-void MoveDistance_reset_move_distance_measurement(MoveDistance *this_MoveDistance);
+void MoveDistance_create();	
 
 //移動距離を返す
-int MoveDistance_detect_move_distance(MoveDistance *this_MoveDistance);
+int MoveDistance_detect_move_distance();
+
+
+
+//このクラスからしか呼ばれないprivateな関数
+
+//現在のモータ回転角を保存
+static void MoveDistance_reset_move_distance_measurement();
+
 
 #endif

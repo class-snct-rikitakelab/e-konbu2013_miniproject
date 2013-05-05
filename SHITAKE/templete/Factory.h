@@ -5,7 +5,6 @@
 
 #include "MoveDistance.h"
 
-MoveDistance moveDistance;
 
 #endif
 
