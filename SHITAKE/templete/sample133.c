@@ -200,7 +200,7 @@ TASK(ActionTask)
 				&pwm_l,
 				&pwm_r);
 			nxt_motor_set_speed(NXT_PORT_C, pwm_l, 1);
-			nxt_motor_set_speed(NXT_PORT_B, pwm_r, 1);
+			nxt_motor_set_speed(NXT_PORT_B, pwm_r, 1);	
 			break;
 
 		default:
@@ -234,11 +234,11 @@ TASK(DisplayTask)
 TASK(ActionTask2)
 {
 	
-	static const float Kp = 5.0;
+	static const float Kp = 1.8;
 	//static float hensa = 0;
 	static float speed = 0;
 
-	cmd_forward = 50;
+	cmd_forward = 20;
 	
 	color_gray=(light_white + light_black)/2;
 
@@ -253,12 +253,6 @@ TASK(ActionTask2)
 	}else if (cmd_turn > 100) {
 		cmd_turn = 100;
 	}
-
-	if(MoveDistance_detect_move_distance(&moveDistance)){
-		ecrobot_sound_tone(440U, 500U,70U);
-
-	}
-	cmd_turn = 0;
 
 	/* 自タスクの終了 */
 	/* 具体的には，自タスクを実行状態から休止状態に移行させ，*/
