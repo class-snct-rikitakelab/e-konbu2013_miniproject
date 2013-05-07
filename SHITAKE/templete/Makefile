@@ -15,7 +15,6 @@ TARGET_SOURCES := \
 	balancer_param.c \
 	MoveDistance.c \
 	MoveDistanceTest.c \
-
 	#sample133.c \
 
 TOPPERS_OSEK_OIL_SOURCE := ./prog.oil
@@ -23,4 +22,3 @@ TOPPERS_OSEK_OIL_SOURCE := ./prog.oil
 O_PATH ?= build
 
 include $(NXTOSEK_ROOT)/ecrobot/lejos_osek.tmf
-
