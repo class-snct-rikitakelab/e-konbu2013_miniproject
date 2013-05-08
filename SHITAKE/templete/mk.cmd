@@ -1,4 +1,3 @@
-
 echo off 
 //set path = c:\cygwin\bin\
 del /Q *.rxe 
