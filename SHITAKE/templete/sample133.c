@@ -37,6 +37,9 @@ unsigned char tx_buf[256]; /* 送信バッファ */
 
 
 int light_white,light_black,color_gray;
+
+//尻尾の角度
+#define ANGLE_OF_AIM 90
 /*
  * システム全体の状態
  */
@@ -100,6 +103,7 @@ void RN_set_color_white();
  * ロボット制御用のプライベート関数
  */
 int RN_move();
+void RA_linetrace_S();
 
 /*
  *カウンタの宣言
@@ -181,7 +185,9 @@ TASK(ActionTask)
 
 	switch (runner_mode){
 		case (RN_MODE_INIT):
+			//ecrobot_sound_tone(880, 512, 30);
 			RN_setting();
+
 		
 			cmd_forward = 0;
 			cmd_turn = 0;
@@ -189,7 +195,7 @@ TASK(ActionTask)
 			break;
 
 		case (RN_MODE_CONTROL):
-			balance_control(
+			/*balance_control(
 				(F32)cmd_forward,
 				(F32)cmd_turn,
 				(F32)ecrobot_get_gyro_sensor(NXT_PORT_S1),
@@ -198,9 +204,12 @@ TASK(ActionTask)
 				(F32)nxt_motor_get_count(NXT_PORT_B),
 				(F32)ecrobot_get_battery_voltage(),
 				&pwm_l,
-				&pwm_r);
-			nxt_motor_set_speed(NXT_PORT_C, pwm_l, 1);
-			nxt_motor_set_speed(NXT_PORT_B, pwm_r, 1);	
+				&pwm_r);*/
+			//nxt_motor_set_speed(NXT_PORT_C, pwm_l, 1);
+			//nxt_motor_set_speed(NXT_PORT_B, pwm_r, 1);	
+			//尻尾用
+			nxt_motor_set_speed(NXT_PORT_C,cmd_forward + cmd_turn/2,1);
+			nxt_motor_set_speed(NXT_PORT_B,cmd_forward - cmd_turn/2,1);
 			break;
 
 		default:
@@ -261,6 +270,7 @@ TASK(ActionTask2)
 
 	BLNU_turn(cmd_turn);
 
+	RA_linetrace_S();
 
 	TerminateTask();
 }
@@ -271,6 +281,35 @@ TASK(LogTask)
 	TerminateTask();
 }
 
+
+void RA_linetrace_S()
+{
+	
+	static const float Kp_s = 2.4;
+	static const float Ki_s = 0.00;
+	static const float Kd_s = 0.00;
+	static const float b = 0;
+	static float hensa = 0;
+	static float i_hensa = 0;
+	static float d_hensa = 0;
+	static float bf_hensa = 0;
+	static float speed = 0;
+	
+	hensa = ANGLE_OF_AIM - ecrobot_get_motor_rev(NXT_PORT_A);
+	i_hensa = i_hensa + (hensa*0.004);
+	d_hensa = (bf_hensa - hensa)/0.004;
+	bf_hensa = hensa;
+	speed = Kp_s*hensa + Ki_s*i_hensa + Kd_s*d_hensa + b;
+
+	if (speed < -100) {
+		speed= -100;
+	}else if (speed > 100) {
+		speed = 100;
+	}
+	
+
+	ecrobot_set_motor_speed(NXT_PORT_A,speed);
+}
 
 /*
  *プライベート関数の実装
