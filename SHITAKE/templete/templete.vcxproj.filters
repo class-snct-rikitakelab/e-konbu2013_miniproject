@@ -39,18 +39,12 @@
     <ClCompile Include="balancer_param.c">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="BalancerUnit.c">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="logSend.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="sample133.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="BalancerUnit.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

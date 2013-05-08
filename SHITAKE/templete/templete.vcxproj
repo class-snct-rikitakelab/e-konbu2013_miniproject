@@ -53,13 +53,11 @@
     <None Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BalancerUnit.c" />
     <ClCompile Include="balancer_param.c" />
     <ClCompile Include="logSend.c" />
     <ClCompile Include="sample133.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BalancerUnit.h" />
     <ClInclude Include="logSend.h" />
     <ClInclude Include="sample133.h" />
   </ItemGroup>

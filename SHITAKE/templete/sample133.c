@@ -231,41 +231,74 @@ TASK(DisplayTask)
  */
 TASK(ActionTask2)
 {
-	
-	static const float Kp = 5.0;
-	//static float hensa = 0;
-	static float speed = 0;
+	static int flg_gray=0;
+	static int light_sensor=0,light_sensor_backup=0;
 
-	cmd_forward = 50;
-	
-	color_gray=(light_white + light_black)/2;
+	light_sensor=ecrobot_get_light_sensor(NXT_PORT_S3);
 
-	hensa = (color_gray) - ecrobot_get_light_sensor(NXT_PORT_S3);
+	cmd_forward = 30;
+	
+	//color_gray=(light_white + light_black)/2;
+	color_gray=(light_white*0.7)+(light_black*0.3);
+	/*
+	if(ecrobot_get_light_sensor(NXT_PORT_S3)>=500 && ecrobot_get_light_sensor(NXT_PORT_S3)<=565){
+		color_gray-=50;
+		ecrobot_sound_tone(880, 512, 30);
+		flg_gray=1;
+	}*/
+
+
+	light_sensor=(light_sensor+light_sensor_backup)/2;
+
+	hensa = (color_gray) - light_sensor;
 	//hensa = LIGHT_THRESHOLD - ecrobot_get_light_sensor(NXT_PORT_S3);
 	/* 白いと＋値 */
 	/* 黒いと－値 */
 
-	cmd_turn = Kp*hensa;
+	if(hensa>40)hensa=40;
+	if(hensa<-40)hensa=-40;
+
+
+	static const float Kp =	7.0;	//0.38;
+	static const float Ki =	0.0;	//0.06;
+	static const float Kd = 3.0;	//0.0027;
+	static const float b = 0;
+
+	static float i_hensa = 0;
+	static float d_hensa = 0;
+	static float bf_hensa = 0;
+
+	/* 白いと＋値 */
+	/* 黒いと－値 */
+
+	//cmd_turn = Kp * hensa;
+
+	i_hensa = i_hensa + (hensa * 0.004);
+
+	d_hensa = (bf_hensa - hensa )/0.004;
+	bf_hensa = hensa;
+
+	cmd_turn = Kp*hensa + Ki*i_hensa + Kd*d_hensa + b;
+
 	if (cmd_turn < -100) {
 		cmd_turn = -100;
 	}else if (cmd_turn > 100) {
 		cmd_turn = 100;
 	}
 
-	/* 自タスクの終了 */
-	/* 具体的には，自タスクを実行状態から休止状態に移行させ，*/
-	/* タスクの終了時に行うべき処理を行う */
-	//logSend(0,0,0,hensa,0,0,0,0);
+	/*if(flg_gray==1){
+		color_gray+=50;
+		flg_gray=0;
+	}*/
 
-	BLNU_turn(cmd_turn);
-
+	light_sensor_backup=light_sensor;
 
 	TerminateTask();
 }
 
 TASK(LogTask)
 {
-	logSend(0,0,gyro_offset,cmd_turn,hensa,0,0,0);		//ログ取り
+	logSend(0,0,0,0,hensa,light_black,light_white,0);		//ログ取り
 	TerminateTask();
 }
 
