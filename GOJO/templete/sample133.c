@@ -32,7 +32,8 @@ typedef enum{
 	RN_SETTINGMODE_OK,
 	RN_SETTINGMODE_OK_END,
 	RN_SETTINGMODE_END,
-	RN_SETTINGMODE_GYRO2
+	RN_SETTINGMODE_GYRO2,
+	RN_SETTINGMODE_RUN
 } RN_SETTINGMODE;
 
 
@@ -68,6 +69,7 @@ void RN_set_gyro_end();
 void RN_set_ok();
 void RN_set_ok_end();
 void RN_gyro();
+void RN_run();
 
 
 /*
@@ -254,6 +256,9 @@ void RN_setting()
 			//runner_mode = RN_MODE_CONTROL;
 			break;
 
+		case (RN_SETTINGMODE_RUN):
+			RN_run();
+
 		case (RN_SETTINGMODE_GYRO2):
 			RN_set_gyro();
 			break;
@@ -318,22 +323,36 @@ void RN_set_ok_end()
 	/* バンパを離すと次の状態に遷移する(設定モードを終了する）*/
 	if (ecrobot_get_touch_sensor(NXT_PORT_S4) != TRUE) {
 		ecrobot_sound_tone(880, 512, 30);
-		setting_mode = RN_SETTINGMODE_GYRO2;
+		setting_mode = RN_SETTINGMODE_RUN;
 	}
 }
 
-void RN_gyro(){
-	//もしジャイロが揺れたら音を鳴らす
+void RN_run(){
+
+	//0=ecrobot_get_motor_rev(NXT_PORT_A);
+	//ecrobot_set_motor_speed(NXT_PORT_B,20);
+	//ecrobot_set_motor_speed(NXT_PORT_C,20);
+
 	if ( ecrobot_get_gyro_sensor(NXT_PORT_S1) == 100 ){
 		
 		ecrobot_sound_tone(440U, 500U, 30U);
 
 	}
-
-
-
-
 }
+
+
+/*void RN_gyro(){
+	//もしジャイロが揺れたら音を鳴らす
+	if ( ecrobot_get_gyro_sensor(NXT_PORT_S1) == 100 ){
+		
+		ecrobot_sound_tone(440U, 500U, 30U);
+
+	}*/
+
+
+
+
+
 
 
 /******************************** END OF FILE ********************************/
