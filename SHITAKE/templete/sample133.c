@@ -18,8 +18,8 @@ static float hensa = 0;
 /* 自己位置同定用　変数宣言 */
 float d_theta_r;					/* 現在の右モータ回転角度 [rad] */
 float d_theta_l;					/* 現在の左モータ回転角度 [rad] */
-static float d_theta_r_t;			/* 1 ステップ前の右モータ回転角度 [rad] */
-static float d_theta_l_t;			/* 1 ステップ前の左モータ回転角度 [rad] */
+//static float d_theta_r_t;			/* 1 ステップ前の右モータ回転角度 [rad] */
+//static float d_theta_l_t;			/* 1 ステップ前の左モータ回転角度 [rad] */
 float velocity_r;					/* 右車輪移動速度 [cm/s] */
 float velocity_l;					/* 左車輪移動速度 [cm/s] */
 float velocity;						/* ロボットの移動速度 [cm/s] */
@@ -30,8 +30,8 @@ float omega;						/* ロボットの回転角角度 [rad/s] */
 unsigned short int l_val;			/* 光センサ値 */
 int temp_x;							/* ロボットの x 座標（出力処理用） */
 int temp_y;							/* ロボットの y 座標（出力処理用） */
-static double omega_r;			//右車輪の回転角速度
-static double omega_l;			//左車輪の回転角速度
+//static double omega_r;			//右車輪の回転角速度
+//static double omega_l;			//左車輪の回転角速度
 unsigned char tx_buf[256]; /* 送信バッファ */
 
 
@@ -97,7 +97,6 @@ void RN_set_ok();
 void RN_set_ok_end();
 void RN_set_color_black();
 void RN_set_color_white();
-
 
 /*
  * ロボット制御用のプライベート関数
@@ -243,12 +242,6 @@ TASK(DisplayTask)
 TASK(ActionTask2)
 {
 	
-	static const float Kp = 1.8;
-	//static float hensa = 0;
-	static float speed = 0;
-
-	cmd_forward = 20;
-	static int flg_gray=0;
 	static int light_sensor=0,light_sensor_backup=0;
 
 	light_sensor=ecrobot_get_light_sensor(NXT_PORT_S3);
@@ -308,16 +301,12 @@ TASK(ActionTask2)
 		flg_gray=0;
 	}*/
 
-	RA_linetrace_S();
+	//RA_linetrace_S();
 	light_sensor_backup=light_sensor;
 
 	TerminateTask();
 }
 
-TASK(LogTask)
-{
-	logSend(0,0,gyro_offset,cmd_turn,hensa,0,0,0);		//ログ取り
-	TerminateTask();
 TASK(LogTask)
 {
 	logSend(0,0,0,0,hensa,0,0,0);		//ログ取り
@@ -453,16 +442,13 @@ void RN_set_color_black()
 		systick_wait_ms(500);
 		setting_mode = RN_SETTING_WHITE;
 	}*/
-	while(1){
 		if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE)
 		{
 			ecrobot_sound_tone(906, 512, 30);
 			light_black=ecrobot_get_light_sensor(NXT_PORT_S3);
 			systick_wait_ms(500);
-			break;
+			setting_mode = RN_SETTING_WHITE;
 		}
-	}
-	setting_mode = RN_SETTING_WHITE;
 
 }
 
@@ -475,16 +461,13 @@ void RN_set_color_white()
 		setting_mode = RN_SETTINGMODE_OK;
 	}*/
 
-	while(1){
 		if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE)
 		{
 			ecrobot_sound_tone(906, 512, 30);
 			light_white=ecrobot_get_light_sensor(NXT_PORT_S3);
 			systick_wait_ms(500);
-			break;
+			setting_mode = RN_SETTINGMODE_OK;
 		}
-	}
-	setting_mode = RN_SETTINGMODE_OK;
 
 }
 
@@ -507,5 +490,5 @@ void RN_set_ok_end()
 		setting_mode = RN_SETTINGMODE_END;
 	}
 }
-
 /******************************** END OF FILE ********************************/
+
