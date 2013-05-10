@@ -15,7 +15,6 @@ TARGET_SOURCES := \
 	balancer_param.c \
 	MoveDistance.c \
 	logSend.c \
-	BalancerUnit.c \
 	sample133.c
 	#MoveDistanceTest.c \
 	
