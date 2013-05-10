@@ -247,7 +247,7 @@ TASK(ActionTask2)
 		flg_gray=1;
 	}*/
 
-
+	/*•½ŠŠ‰»*/
 	light_sensor=(light_sensor+light_sensor_backup)/2;
 
 	hensa = (color_gray) - light_sensor;
@@ -255,8 +255,8 @@ TASK(ActionTask2)
 	/* ”’‚¢‚Æ{’l */
 	/* •‚¢‚Æ|’l */
 
-	if(hensa>40)hensa=40;
-	if(hensa<-40)hensa=-40;
+	if(hensa>45)hensa=45;
+	if(hensa<-45)hensa=-45;
 
 
 	static const float Kp =	7.0;	//0.38;
@@ -298,7 +298,7 @@ TASK(ActionTask2)
 
 TASK(LogTask)
 {
-	logSend(0,0,0,0,hensa,light_black,light_white,0);		//ƒƒOæ‚è
+	logSend(0,0,0,0,hensa,0,0,0);		//ƒƒOæ‚è
 	TerminateTask();
 }
 
