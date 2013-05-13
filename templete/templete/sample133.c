@@ -1,7 +1,7 @@
-/*
+ï»¿/*
  * sample133.c
  *
- * ƒoƒ‰ƒ“ƒX‚µ‚Ä—§‚¿Aƒ‰ƒCƒ“ƒgƒŒ[ƒX‚·‚éAPID§Œä
+ * ãƒãƒ©ãƒ³ã‚¹ã—ã¦ç«‹ã¡ã€ãƒ©ã‚¤ãƒ³ãƒˆãƒ¬ãƒ¼ã‚¹ã™ã‚‹ã€PIDåˆ¶å¾¡
  * (c) COPYRIGHT 2010 Afrel., Inc.
  * All rights reserved
  */
@@ -9,12 +9,12 @@
 #include "sample133.h"
 
 /*
- * è‡’l
+ * é–¾å€¤
 */
 #define LIGHT_THRESHOLD 600
 
 /*
- * ƒVƒXƒeƒ€‘S‘Ì‚Ìó‘Ô
+ * ã‚·ã‚¹ãƒ†ãƒ å…¨ä½“ã®çŠ¶æ…‹
  */
 typedef enum{
 	RN_MODE_INIT, 		/* system initialize mode */
@@ -23,7 +23,7 @@ typedef enum{
 
 
 /*
- * ƒLƒƒƒŠƒuƒŒ[ƒVƒ‡ƒ“‚Ìó‘Ô
+ * ã‚­ãƒ£ãƒªãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®çŠ¶æ…‹
  */
 typedef enum{
 	RN_SETTINGMODE_GYRO_START,
@@ -36,29 +36,29 @@ typedef enum{
 
 
 /*
- *‰Šúó‘Ô
+ *åˆæœŸçŠ¶æ…‹
  */
 
 RN_MODE runner_mode = RN_MODE_INIT;					/* NXTway-GS mode */
-RN_SETTINGMODE setting_mode = RN_SETTINGMODE_GYRO_START;/* ƒLƒƒƒŠƒuƒŒ[ƒVƒ‡ƒ“‚Ìó‘Ô */
+RN_SETTINGMODE setting_mode = RN_SETTINGMODE_GYRO_START;/* ã‚­ãƒ£ãƒªãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®çŠ¶æ…‹ */
 
 
 /*
- * ƒWƒƒƒCƒƒZƒ“ƒTƒIƒtƒZƒbƒgŒvZ—p•Ï”
+ * ã‚¸ãƒ£ã‚¤ãƒ­ã‚»ãƒ³ã‚µã‚ªãƒ•ã‚»ãƒƒãƒˆè¨ˆç®—ç”¨å¤‰æ•°
  */
 static U32	gyro_offset = 0;    /* gyro sensor offset value */
 static U32	avg_cnt = 0;		/* average count to calc gyro offset */
 static U32	cal_start_time;		/* calibration start time */
 
 
-/* ƒoƒ‰ƒ“ƒXƒRƒ“ƒgƒ[ƒ‹‚Ö“n‚·ƒRƒ}ƒ“ƒh—p•Ï” */
+/* ãƒãƒ©ãƒ³ã‚¹ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã¸æ¸¡ã™ã‚³ãƒãƒ³ãƒ‰ç”¨å¤‰æ•° */
 S8  cmd_forward, cmd_turn;
-/* ƒoƒ‰ƒ“ƒXƒRƒ“ƒgƒ[ƒ‹‚©‚ç•Ô‚³‚ê‚éƒ‚[ƒ^§Œä—p•Ï” */
+/* ãƒãƒ©ãƒ³ã‚¹ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã‹ã‚‰è¿”ã•ã‚Œã‚‹ãƒ¢ãƒ¼ã‚¿åˆ¶å¾¡ç”¨å¤‰æ•° */
 S8	pwm_l, pwm_r;
 	
 	
 /*
- * ƒLƒƒƒŠƒuƒŒ[ƒVƒ‡ƒ“—p‚Ìƒvƒ‰ƒCƒx[ƒgŠÖ”
+ * ã‚­ãƒ£ãƒªãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ç”¨ã®ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆé–¢æ•°
  */
 void RN_setting();
 void RN_set_gyro_start();
@@ -69,18 +69,18 @@ void RN_set_ok_end();
 
 
 /*
- * ƒƒ{ƒbƒg§Œä—p‚Ìƒvƒ‰ƒCƒx[ƒgŠÖ”
+ * ãƒ­ãƒœãƒƒãƒˆåˆ¶å¾¡ç”¨ã®ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆé–¢æ•°
  */
 int RN_move();
 
 /*
- *ƒJƒEƒ“ƒ^‚ÌéŒ¾
+ *ã‚«ã‚¦ãƒ³ã‚¿ã®å®£è¨€
  */
 DeclareCounter(SysTimerCnt);
 
 
 /*
- *ƒ^ƒXƒN‚ÌéŒ¾
+ *ã‚¿ã‚¹ã‚¯ã®å®£è¨€
  */
 DeclareTask(ActionTask);
 DeclareTask(ActionTask2);
@@ -88,13 +88,13 @@ DeclareTask(DisplayTask);
 
 
 /*
- *‰t»ƒfƒBƒXƒvƒŒƒC‚É•\¦‚·‚éƒVƒXƒeƒ€–¼İ’è
+ *æ¶²æ™¶ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ã«è¡¨ç¤ºã™ã‚‹ã‚·ã‚¹ãƒ†ãƒ åè¨­å®š
  */
 const char target_subsystem_name[] = "OSEK Sample133";
 
 
 /*
- *‰Šúˆ—
+ *åˆæœŸå‡¦ç†
  */
 void ecrobot_device_initialize(void)
 {
@@ -103,7 +103,7 @@ void ecrobot_device_initialize(void)
 
 
 /*
- *Œãn––ˆ—
+ *å¾Œå§‹æœ«å‡¦ç†
  */
 void ecrobot_device_terminate(void)
 {
@@ -139,7 +139,7 @@ void user_1ms_isr_type2(void){
 
 
 /*
- *ƒ^ƒXƒN1—p‚ÌŠÖ”
+ *ã‚¿ã‚¹ã‚¯1ç”¨ã®é–¢æ•°
  */
 TASK(ActionTask)
 {
@@ -178,23 +178,23 @@ TASK(ActionTask)
 
 
 /*
- *•\¦—p‚ÌŠÖ”
+ *è¡¨ç¤ºç”¨ã®é–¢æ•°
  */
 TASK(DisplayTask)
 {
-	/* ƒ‚ƒjƒ^‚ÉƒVƒXƒeƒ€–¼‚ğ•\¦‚·‚é */
+	/* ãƒ¢ãƒ‹ã‚¿ã«ã‚·ã‚¹ãƒ†ãƒ åã‚’è¡¨ç¤ºã™ã‚‹ */
 	ecrobot_status_monitor(target_subsystem_name);
 
-	/* ©ƒ^ƒXƒN‚ÌI—¹ */
-	/* ‹ï‘Ì“I‚É‚ÍC©ƒ^ƒXƒN‚ğÀsó‘Ô‚©‚ç‹x~ó‘Ô‚ÉˆÚs‚³‚¹C*/
-	/* ƒ^ƒXƒN‚ÌI—¹‚És‚¤‚×‚«ˆ—‚ğs‚¤ */
+	/* è‡ªã‚¿ã‚¹ã‚¯ã®çµ‚äº† */
+	/* å…·ä½“çš„ã«ã¯ï¼Œè‡ªã‚¿ã‚¹ã‚¯ã‚’å®Ÿè¡ŒçŠ¶æ…‹ã‹ã‚‰ä¼‘æ­¢çŠ¶æ…‹ã«ç§»è¡Œã•ã›ï¼Œ*/
+	/* ã‚¿ã‚¹ã‚¯ã®çµ‚äº†æ™‚ã«è¡Œã†ã¹ãå‡¦ç†ã‚’è¡Œã† */
 	TerminateTask();
 }
 
 
 
 /*
- *ƒ^ƒXƒN1—p‚ÌŠÖ”
+ *ã‚¿ã‚¹ã‚¯1ç”¨ã®é–¢æ•°
  */
 TASK(ActionTask2)
 {
@@ -206,8 +206,8 @@ TASK(ActionTask2)
 	cmd_forward = 50;
 	
 	hensa = LIGHT_THRESHOLD - ecrobot_get_light_sensor(NXT_PORT_S3);
-	/* ”’‚¢‚Æ{’l */
-	/* •‚¢‚Æ|’l */
+	/* ç™½ã„ã¨ï¼‹å€¤ */
+	/* é»’ã„ã¨ï¼å€¤ */
 
 	cmd_turn = Kp*hensa;
 	if (cmd_turn < -100) {
@@ -216,14 +216,14 @@ TASK(ActionTask2)
 		cmd_turn = 100;
 	}
 
-	/* ©ƒ^ƒXƒN‚ÌI—¹ */
-	/* ‹ï‘Ì“I‚É‚ÍC©ƒ^ƒXƒN‚ğÀsó‘Ô‚©‚ç‹x~ó‘Ô‚ÉˆÚs‚³‚¹C*/
-	/* ƒ^ƒXƒN‚ÌI—¹‚És‚¤‚×‚«ˆ—‚ğs‚¤ */
+	/* è‡ªã‚¿ã‚¹ã‚¯ã®çµ‚äº† */
+	/* å…·ä½“çš„ã«ã¯ï¼Œè‡ªã‚¿ã‚¹ã‚¯ã‚’å®Ÿè¡ŒçŠ¶æ…‹ã‹ã‚‰ä¼‘æ­¢çŠ¶æ…‹ã«ç§»è¡Œã•ã›ï¼Œ*/
+	/* ã‚¿ã‚¹ã‚¯ã®çµ‚äº†æ™‚ã«è¡Œã†ã¹ãå‡¦ç†ã‚’è¡Œã† */
 	TerminateTask();
 }
 
 /*
- *ƒvƒ‰ƒCƒx[ƒgŠÖ”‚ÌÀ‘•
+ *ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆé–¢æ•°ã®å®Ÿè£…
  */
 void RN_setting()
 {
@@ -259,11 +259,11 @@ void RN_setting()
 
 void RN_set_gyro_start()
 {
-	/* ƒWƒƒƒCƒƒZƒ“ƒT‚Ìİ’è‚ğn‚ß‚é */
+	/* ã‚¸ãƒ£ã‚¤ãƒ­ã‚»ãƒ³ã‚µã®è¨­å®šã‚’å§‹ã‚ã‚‹ */
 	if (ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE) {
 		ecrobot_sound_tone(880, 512, 30);
 
-		/* ƒWƒƒƒCƒƒZƒ“ƒT‚Ì’l‚ğŒvZ‚·‚é‚½‚ß‚ÌŠJnŠÔ‚ğƒZƒbƒg‚·‚é */
+		/* ã‚¸ãƒ£ã‚¤ãƒ­ã‚»ãƒ³ã‚µã®å€¤ã‚’è¨ˆç®—ã™ã‚‹ãŸã‚ã®é–‹å§‹æ™‚é–“ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ */
 		cal_start_time = ecrobot_get_systick_ms();
 		setting_mode = RN_SETTINGMODE_GYRO;
 	}
@@ -272,11 +272,11 @@ void RN_set_gyro_start()
 
 void RN_set_gyro()
 {
-	/* ƒWƒƒƒCƒƒZƒ“ƒT‚Ìİ’è‚ğ‚·‚é */
+	/* ã‚¸ãƒ£ã‚¤ãƒ­ã‚»ãƒ³ã‚µã®è¨­å®šã‚’ã™ã‚‹ */
 	gyro_offset += (U32)ecrobot_get_gyro_sensor(NXT_PORT_S1);
 	avg_cnt++;
 	
-	/* 1•bŒo‰ß‚µ‚½‚çAƒWƒƒƒCƒƒZƒ“ƒT‚ÌƒIƒtƒZƒbƒg’l‚Ì•½‹Ï’l‚ğŒvZ‚µAŸ‚Ìó‘Ô‚É‘JˆÚ‚·‚éB */
+	/* 1ç§’çµŒéã—ãŸã‚‰ã€ã‚¸ãƒ£ã‚¤ãƒ­ã‚»ãƒ³ã‚µã®ã‚ªãƒ•ã‚»ãƒƒãƒˆå€¤ã®å¹³å‡å€¤ã‚’è¨ˆç®—ã—ã€æ¬¡ã®çŠ¶æ…‹ã«é·ç§»ã™ã‚‹ã€‚ */
 	if ((ecrobot_get_systick_ms() - cal_start_time) >= 1000U) {
 		gyro_offset /= avg_cnt;
 
@@ -289,7 +289,7 @@ void RN_set_gyro()
 
 void RN_set_gyro_end()
 {
-	/* ƒoƒ“ƒp‚ğ—£‚·‚ÆŸ‚Ìó‘Ô‚É‘JˆÚ‚·‚é */
+	/* ãƒãƒ³ãƒ‘ã‚’é›¢ã™ã¨æ¬¡ã®çŠ¶æ…‹ã«é·ç§»ã™ã‚‹ */
 	if (ecrobot_get_touch_sensor(NXT_PORT_S4) != TRUE) {
 		setting_mode = RN_SETTINGMODE_OK;
 	}
@@ -298,7 +298,7 @@ void RN_set_gyro_end()
 
 void RN_set_ok()
 {	
-	/* ƒXƒ^[ƒgˆÊ’u‚Éƒƒ{ƒbƒg‚ğ’u‚«Aƒoƒ“ƒp‚ğ‰Ÿ‚·‚ÆŸ‚Ìó‘Ô‚É‘JˆÚ‚·‚éB */
+	/* ã‚¹ã‚¿ãƒ¼ãƒˆä½ç½®ã«ãƒ­ãƒœãƒƒãƒˆã‚’ç½®ãã€ãƒãƒ³ãƒ‘ã‚’æŠ¼ã™ã¨æ¬¡ã®çŠ¶æ…‹ã«é·ç§»ã™ã‚‹ã€‚ */
 	if (ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE) {
 		ecrobot_sound_tone(880, 512, 30);
 		setting_mode = RN_SETTINGMODE_OK_END;
@@ -308,7 +308,7 @@ void RN_set_ok()
 
 void RN_set_ok_end()
 {
-	/* ƒoƒ“ƒp‚ğ—£‚·‚ÆŸ‚Ìó‘Ô‚É‘JˆÚ‚·‚é(İ’èƒ‚[ƒh‚ğI—¹‚·‚éj*/
+	/* ãƒãƒ³ãƒ‘ã‚’é›¢ã™ã¨æ¬¡ã®çŠ¶æ…‹ã«é·ç§»ã™ã‚‹(è¨­å®šãƒ¢ãƒ¼ãƒ‰ã‚’çµ‚äº†ã™ã‚‹ï¼‰*/
 	if (ecrobot_get_touch_sensor(NXT_PORT_S4) != TRUE) {
 		ecrobot_sound_tone(880, 512, 30);
 		setting_mode = RN_SETTINGMODE_END;

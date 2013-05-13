@@ -36,7 +36,6 @@ typedef enum{
 	RN_SETTINGMODE_OK,
 	RN_SETTINGMODE_OK_END,
 	RN_SETTINGMODE_END,
-	RN_SETTINGMODE_GYRO2,
 	RN_CAL_BLACK,
 	RN_CAL_WHITE
 } RN_SETTINGMODE;
@@ -220,9 +219,15 @@ TASK(ActionTask2)
 	static float hensa = 0;
 //	static float speed = 0;
 	static float kido_average;
+	static int crash_frag = 0;
+	static int wheel_turn;
+
+	if(crash_frag == 0)
+	{
+		cmd_forward = 10;
+	}
 
 	kido_average = (black + white)/2;
-	cmd_forward = 10;
 	
 	hensa = kido_average - ecrobot_get_light_sensor(NXT_PORT_S2);
 	/* 白いと＋値 */
@@ -233,6 +238,25 @@ TASK(ActionTask2)
 		cmd_turn = -100;
 	}else if (cmd_turn > 100) {
 		cmd_turn = 100;
+	}
+
+	if(ecrobot_get_gyro_sensor(NXT_PORT_S1) > 700)
+	{
+		ecrobot_sound_tone(880, 512, 30);
+		crash_frag = 1;
+		cmd_forward = -10;
+		wheel_turn = nxt_motor_get_count(NXT_PORT_B);
+	}
+
+	if(nxt_motor_get_count(NXT_PORT_B) < wheel_turn - 360)
+	{
+		ecrobot_sound_tone(880, 512, 30);
+		cmd_forward = 50;
+	}
+
+	if(crash_frag == 1)
+	{
+	
 	}
 
 	/* 自タスクの終了 */
@@ -278,10 +302,6 @@ void RN_setting()
 		case (RN_SETTINGMODE_END):
 			runner_mode = RN_MODE_CONTROL;
 			break;
-
-//		case (RN_SETTINGMODE_GYRO2):
-//			RN_set_gyro();
-//			break;
 
 		default:
 			break;
@@ -367,26 +387,5 @@ void RN_set_ok_end()
 		setting_mode = RN_SETTINGMODE_END ;
 	}
 }
-
-/*
-void RN_gyro(){
-	//もしジャイロが揺れたら音を鳴らす
-	if ( ecrobot_get_gyro_sensor(NXT_PORT_S1) == 100 ){
-		
-		ecrobot_sound_tone(440U, 500U, 30U);
-		setting_mode = RN_CAL;
-
-	}
-
-
-
-
-}
-
-*/
-
-
-
-
 
 /******************************** END OF FILE ********************************/
