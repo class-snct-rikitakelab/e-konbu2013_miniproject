@@ -24,19 +24,19 @@ float velocity_r;					/* 右車輪移動速度 [cm/s] */
 float velocity_l;					/* 左車輪移動速度 [cm/s] */
 float velocity;						/* ロボットの移動速度 [cm/s] */
 float omega;						/* ロボットの回転角角度 [rad/s] */
-//static float position_x = POSITION_X0; /* ロボットの x 座標 */
-//static float position_y = POSITION_Y0; /* ロボットの y 座標 */
+static float position_x;			 /* ロボットの x 座標 */
+static float position_y;			 /* ロボットの y 座標 */
 //static float theta = THETA_0;		/* ロボットの姿勢角 */
-unsigned short int l_val;			/* 光センサ値 */
-int temp_x;							/* ロボットの x 座標（出力処理用） */
-int temp_y;							/* ロボットの y 座標（出力処理用） */
+//unsigned short int l_val;			/* 光センサ値 */
+//int temp_x;							/* ロボットの x 座標（出力処理用） */
+//int temp_y;							/* ロボットの y 座標（出力処理用） */
 //static double omega_r;			//右車輪の回転角速度
 //static double omega_l;			//左車輪の回転角速度
 unsigned char tx_buf[256]; /* 送信バッファ */
 
 
 
-int light_white,light_black,color_gray;
+int light_white,light_black,color_gray,gray_zone;
 
 //尻尾の角度
 #define ANGLE_OF_AIM 90
@@ -60,7 +60,8 @@ typedef enum{
 	RN_SETTINGMODE_OK_END,
 	RN_SETTINGMODE_END,
 	RN_SETTING_BLACK,
-	RN_SETTING_WHITE
+	RN_SETTING_WHITE,
+	RN_SETTING_GRAY_ZONE
 } RN_SETTINGMODE;
 
 
@@ -97,6 +98,7 @@ void RN_set_ok();
 void RN_set_ok_end();
 void RN_set_color_black();
 void RN_set_color_white();
+void RN_set_color_gray();
 
 /*
  * ロボット制御用のプライベート関数
@@ -136,6 +138,9 @@ void ecrobot_device_initialize(void)
 	ecrobot_set_motor_rev(NXT_PORT_C,0);
 
 	ecrobot_init_bt_slave("LEJOS-OSEK");
+
+	//ログ値初期化
+	resetSelfLocation();
 }
 
 
@@ -194,7 +199,7 @@ TASK(ActionTask)
 			break;
 
 		case (RN_MODE_CONTROL):
-			/*balance_control(
+			balance_control(
 				(F32)cmd_forward,
 				(F32)cmd_turn,
 				(F32)ecrobot_get_gyro_sensor(NXT_PORT_S1),
@@ -203,12 +208,12 @@ TASK(ActionTask)
 				(F32)nxt_motor_get_count(NXT_PORT_B),
 				(F32)ecrobot_get_battery_voltage(),
 				&pwm_l,
-				&pwm_r);*/
-			//nxt_motor_set_speed(NXT_PORT_C, pwm_l, 1);
-			//nxt_motor_set_speed(NXT_PORT_B, pwm_r, 1);	
+				&pwm_r);
+				nxt_motor_set_speed(NXT_PORT_C, pwm_l, 1);
+				nxt_motor_set_speed(NXT_PORT_B, pwm_r, 1);	
 			//尻尾用
-			nxt_motor_set_speed(NXT_PORT_C,cmd_forward + cmd_turn/2,1);
-			nxt_motor_set_speed(NXT_PORT_B,cmd_forward - cmd_turn/2,1);
+			//nxt_motor_set_speed(NXT_PORT_C,cmd_forward + cmd_turn/2,1);
+			//nxt_motor_set_speed(NXT_PORT_B,cmd_forward - cmd_turn/2,1);
 			break;
 
 		default:
@@ -241,15 +246,17 @@ TASK(DisplayTask)
  */
 TASK(ActionTask2)
 {
+	self_location();
 	
 	static int light_sensor=0,light_sensor_backup=0;
 
 	light_sensor=ecrobot_get_light_sensor(NXT_PORT_S3);
 
+
 	cmd_forward = 30;
 	
 	//color_gray=(light_white + light_black)/2;
-	color_gray=(light_white*0.7)+(light_black*0.3);
+	
 	/*
 	if(ecrobot_get_light_sensor(NXT_PORT_S3)>=500 && ecrobot_get_light_sensor(NXT_PORT_S3)<=565){
 		color_gray-=50;
@@ -260,18 +267,20 @@ TASK(ActionTask2)
 	/*平滑化*/
 	light_sensor=(light_sensor+light_sensor_backup)/2;
 
-	hensa = (color_gray) - light_sensor;
+	if(light_sensor >= (gray_zone-10) && light_sensor <= (gray_zone+10))
+		hensa = gray_zone - light_sensor;
+	else hensa = (color_gray) - light_sensor;
 	//hensa = LIGHT_THRESHOLD - ecrobot_get_light_sensor(NXT_PORT_S3);
-	/* 白いと＋値 */
-	/* 黒いと－値 */
+	/* white value +*/
+	/* black value -*/
 
 	if(hensa>45)hensa=45;
 	if(hensa<-45)hensa=-45;
 
 
-	static const float Kp =	7.0;	//0.38;
-	static const float Ki =	0.0;	//0.06;
-	static const float Kd = 3.0;	//0.0027;
+	static const float Kp =	9.0;		//0.38;
+	static const float Ki =	0.0	;	//0.06;
+	static const float Kd =	5.0	;	//0.0027;
 	static const float b = 0;
 
 	static float i_hensa = 0;
@@ -309,7 +318,11 @@ TASK(ActionTask2)
 
 TASK(LogTask)
 {
-	logSend(0,0,0,0,hensa,0,0,0);		//ログ取り
+	position_x=getXCoo();
+	position_y=getYCoo();
+
+	logSend(0,0,hensa,gray_zone,0,0,0,0);		//ログ取り
+	
 	TerminateTask();
 }
 
@@ -379,6 +392,10 @@ void RN_setting()
 
 		case (RN_SETTING_WHITE):
 			RN_set_color_white();
+			break;
+
+		case (RN_SETTING_GRAY_ZONE):
+			RN_set_color_gray();
 			break;
 		default:
 			break;
@@ -466,9 +483,24 @@ void RN_set_color_white()
 			ecrobot_sound_tone(906, 512, 30);
 			light_white=ecrobot_get_light_sensor(NXT_PORT_S3);
 			systick_wait_ms(500);
-			setting_mode = RN_SETTINGMODE_OK;
+			setting_mode = RN_SETTING_GRAY_ZONE;
 		}
 
+}
+
+void RN_set_color_gray()
+{
+
+	//ecrobot_sound_tone(906, 512, 30);
+	if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE)
+	{
+		ecrobot_sound_tone(906, 512, 30);
+		gray_zone=ecrobot_get_light_sensor(NXT_PORT_S3);
+		
+		systick_wait_ms(500);
+		setting_mode = RN_SETTINGMODE_OK;
+
+	}
 }
 
 
@@ -477,6 +509,8 @@ void RN_set_ok()
 	/* スタート位置にロボットを置き、バンパを押すと次の状態に遷移する。 */
 	if (ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE) {
 		ecrobot_sound_tone(880, 512, 30);
+		color_gray=(light_white*0.5)+(light_black*0.5);
+		gray_zone=(light_white*0.5)+(gray_zone*0.5);
 		setting_mode = RN_SETTINGMODE_OK_END;
 	}
 }
