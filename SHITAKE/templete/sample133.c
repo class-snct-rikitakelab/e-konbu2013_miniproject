@@ -371,16 +371,16 @@ void RN_set_color_black()
 		systick_wait_ms(500);
 		setting_mode = RN_SETTING_WHITE;
 	}*/
-	
+	while(1){
 		if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE)
 		{
 			ecrobot_sound_tone(906, 512, 30);
 			light_black=ecrobot_get_light_sensor(NXT_PORT_S3);
 			systick_wait_ms(500);
-			//break;
-			setting_mode = RN_SETTING_WHITE;
+			break;
 		}
-	//setting_mode = RN_SETTING_WHITE;
+	}
+	setting_mode = RN_SETTING_WHITE;
 
 }
 
@@ -393,15 +393,16 @@ void RN_set_color_white()
 		setting_mode = RN_SETTINGMODE_OK;
 	}*/
 
+	while(1){
 		if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE)
 		{
 			ecrobot_sound_tone(906, 512, 30);
 			light_white=ecrobot_get_light_sensor(NXT_PORT_S3);
 			systick_wait_ms(500);
-			//break;
-			setting_mode = RN_SETTINGMODE_OK;
+			break;
 		}
-	//setting_mode = RN_SETTINGMODE_OK;
+	}
+	setting_mode = RN_SETTINGMODE_OK;
 
 }
 
