@@ -43,7 +43,7 @@ typedef enum{
 
 
 static int black,white;
-
+static int slope_sound_frag = 0;
 
 
 /*
@@ -225,8 +225,11 @@ TASK(ActionTask2)
 
 	if(crash_frag == 0)
 	{
-		cmd_forward = 20;
+		cmd_forward = 30;
+	}else{
+		cmd_forward = 100;
 	}
+
 
 	kido_average = (black + white)/2;
 	
@@ -235,32 +238,36 @@ TASK(ActionTask2)
 	/* 黒いと－値 */
 
 	cmd_turn = Kp*hensa;
+
 	if (cmd_turn < -100) {
 		cmd_turn = -100;
 	}else if (cmd_turn > 100) {
 		cmd_turn = 100;
 	}
 
-	if(ecrobot_get_gyro_sensor(NXT_PORT_S1) > 700)
+	if((ecrobot_get_gyro_sensor(NXT_PORT_S1) > 700) && (slope_sound_frag == 1))
 	{
 		ecrobot_sound_tone(880, 512, 30);
 		crash_frag = 1;
-		cmd_forward = -10;
+		cmd_forward = -15;
 		wheel_turn = nxt_motor_get_count(NXT_PORT_B);
 	}
 
-	if((nxt_motor_get_count(NXT_PORT_B) < wheel_turn - 180)/* && (crash_frag == 1)*/)
+	if((nxt_motor_get_count(NXT_PORT_B) < wheel_turn - 180) && (nxt_motor_get_count(NXT_PORT_B) > wheel_turn - 720) && (crash_frag == 1))
 	{
-		ecrobot_sound_tone(880, 512, 30);
+		ecrobot_sound_tone(980, 512, 30);
 		cmd_forward = 50;
-	//	mahha_frag = 1;
+		mahha_frag = 1;
 	}
-/*
+
 	if((mahha_frag == 1) && (ecrobot_get_gyro_sensor(NXT_PORT_S1) > 700))
 	{
-		cmd_forward = 20;
+		ecrobot_sound_tone(780, 512, 30);
+		cmd_forward = 30;
+		mahha_frag = 0;
+		crash_frag = 0;
 	}
-*/
+
 	/* 自タスクの終了 */
 	/* 具体的には，自タスクを実行状態から休止状態に移行させ，*/
 	/* タスクの終了時に行うべき処理を行う */
@@ -303,6 +310,7 @@ void RN_setting()
 
 		case (RN_SETTINGMODE_END):
 			runner_mode = RN_MODE_CONTROL;
+			slope_sound_frag = 1;
 			break;
 
 		default:
