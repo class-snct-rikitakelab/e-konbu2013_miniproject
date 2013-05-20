@@ -104,7 +104,7 @@ void RN_set_color_gray();
  * ロボット制御用のプライベート関数
  */
 int RN_move();
-void RA_linetrace_S();
+void tail_controll();
 
 /*
  *カウンタの宣言
@@ -317,7 +317,7 @@ TASK(ActionTask2)
 		flg_gray=0;
 	}*/
 
-	//RA_linetrace_S();
+	//tail_controll();
 	light_sensor_backup=light_sensor;
 
 	TerminateTask();
@@ -334,7 +334,7 @@ TASK(LogTask)
 }
 
 
-void RA_linetrace_S()
+void tail_controll()
 {
 	
 	static const float Kp_s = 2.4;
