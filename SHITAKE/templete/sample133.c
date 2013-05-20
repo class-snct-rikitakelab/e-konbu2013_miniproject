@@ -36,7 +36,7 @@ unsigned char tx_buf[256]; /* 送信バッファ */
 
 
 
-int light_white,light_black,color_gray,gray_zone;
+int light_white,light_black,color_gray,gray_zone,flg_location=0;
 
 //尻尾の角度
 #define ANGLE_OF_AIM 90
@@ -247,13 +247,20 @@ TASK(DisplayTask)
 TASK(ActionTask2)
 {
 	self_location();
+
+
+	//position
+	if(position_x>2 || position_x<-2){
+		ecrobot_sound_tone(880, 512, 30);
+		flg_location=1;
+	}
 	
 	static int light_sensor=0,light_sensor_backup=0;
 
 	light_sensor=ecrobot_get_light_sensor(NXT_PORT_S3);
 
 
-	cmd_forward = 30;
+	cmd_forward = 20;
 	
 	//color_gray=(light_white + light_black)/2;
 	
@@ -321,7 +328,7 @@ TASK(LogTask)
 	position_x=getXCoo();
 	position_y=getYCoo();
 
-	logSend(0,0,hensa,gray_zone,0,0,0,0);		//ログ取り
+	logSend(0,0,position_x,position_y,flg_location,0,0,0);		//ログ取り
 	
 	TerminateTask();
 }
