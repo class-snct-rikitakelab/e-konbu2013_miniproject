@@ -17,16 +17,16 @@
   <ItemGroup>
     <None Include="readme.txt" />
     <None Include="Makefile">
-      <Filter>ソース ファイル</Filter>
-    </None>
-    <None Include="prog.oil">
-      <Filter>ソース ファイル</Filter>
+      <Filter>リソース ファイル</Filter>
     </None>
     <None Include="mk.cmd">
-      <Filter>ソース ファイル</Filter>
+      <Filter>リソース ファイル</Filter>
     </None>
     <None Include="mk_clean.cmd">
-      <Filter>ソース ファイル</Filter>
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="prog.oil">
+      <Filter>リソース ファイル</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -45,19 +45,37 @@
     <ClCompile Include="MoveDistanceTest.c">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="SelfLocation.c">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="mymath.c">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="logSend.c">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="sample133.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Calibration.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="MoveDistance.h">
-      <Filter>ソース ファイル</Filter>
+    <ClInclude Include="SelfLocation.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="factory.h">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveDistance.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="sample133.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="mymath.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="logSend.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
