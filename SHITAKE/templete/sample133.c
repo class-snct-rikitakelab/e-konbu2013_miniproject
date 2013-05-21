@@ -9,11 +9,10 @@
 #include "sample133.h"
 #include "MoveDistance.h"
 #include "Factory.h"
+#include "PID_controll.h"
 
 
-
-
-static float hensa = 0;
+//static float hensa = 0;
 
 /* 自己位置同定用　変数宣言 */
 float d_theta_r;					/* 現在の右モータ回転角度 [rad] */
@@ -254,72 +253,16 @@ TASK(ActionTask2)
 		ecrobot_sound_tone(880, 512, 30);
 		flg_location=1;
 	}
-	
-	static int light_sensor=0,light_sensor_backup=0;
-
-	light_sensor=ecrobot_get_light_sensor(NXT_PORT_S3);
 
 
 	cmd_forward = 20;
+
+
+	cmd_turn=PID_controll();
+
 	
-	//color_gray=(light_white + light_black)/2;
-	
-	/*
-	if(ecrobot_get_light_sensor(NXT_PORT_S3)>=500 && ecrobot_get_light_sensor(NXT_PORT_S3)<=565){
-		color_gray-=50;
-		ecrobot_sound_tone(880, 512, 30);
-		flg_gray=1;
-	}*/
-
-	/*平滑化*/
-	light_sensor=(light_sensor+light_sensor_backup)/2;
-
-	if(light_sensor >= (gray_zone-10) && light_sensor <= (gray_zone+10))
-		hensa = gray_zone - light_sensor;
-	else hensa = (color_gray) - light_sensor;
-	//hensa = LIGHT_THRESHOLD - ecrobot_get_light_sensor(NXT_PORT_S3);
-	/* white value +*/
-	/* black value -*/
-
-	if(hensa>45)hensa=45;
-	if(hensa<-45)hensa=-45;
-
-
-	static const float Kp =	9.0;		//0.38;
-	static const float Ki =	0.0	;	//0.06;
-	static const float Kd =	5.0	;	//0.0027;
-	static const float b = 0;
-
-	static float i_hensa = 0;
-	static float d_hensa = 0;
-	static float bf_hensa = 0;
-
-	/* 白いと＋値 */
-	/* 黒いと－値 */
-
-	//cmd_turn = Kp * hensa;
-
-	i_hensa = i_hensa + (hensa * 0.004);
-
-	d_hensa = (bf_hensa - hensa )/0.004;
-	bf_hensa = hensa;
-
-	cmd_turn = Kp*hensa + Ki*i_hensa + Kd*d_hensa + b;
-
-	if (cmd_turn < -100) {
-		cmd_turn = -100;
-	}else if (cmd_turn > 100) {
-		cmd_turn = 100;
-	}
-
-	/*if(flg_gray==1){
-		color_gray+=50;
-		flg_gray=0;
-	}*/
-
 	//RA_linetrace_S();
-	light_sensor_backup=light_sensor;
-
+	
 	TerminateTask();
 }
 
@@ -530,6 +473,17 @@ void RN_set_ok_end()
 		ecrobot_sound_tone(880, 512, 30);
 		setting_mode = RN_SETTINGMODE_END;
 	}
+}
+
+int get_gray_zone(){
+
+	return gray_zone;
+}
+
+int get_color_gray(){
+
+	return color_gray;
+
 }
 /******************************** END OF FILE ********************************/
 

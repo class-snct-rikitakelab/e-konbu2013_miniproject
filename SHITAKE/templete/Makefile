@@ -17,7 +17,9 @@ TARGET_SOURCES := \
 	logSend.c \
 	mymath.c \
 	SelfLocation.c \
-	sample133.c
+	sample133.c \
+	LightSensorLPF.c \
+	PID_controll.c
 	#MoveDistanceTest.c \
 	
 TOPPERS_OSEK_OIL_SOURCE := ./prog.oil

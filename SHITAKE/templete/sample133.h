@@ -9,5 +9,7 @@
 #include "tyreal_light_ver.h"
 #include "SelfLocation.h"
 
+int get_gray_zone();
+int get_color_gray();
 
 #endif
