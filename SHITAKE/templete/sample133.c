@@ -50,7 +50,7 @@ typedef enum{
 
 /*
  * キャリブレーションの状態
- */
+ 
 typedef enum{
 	RN_SETTINGMODE_GYRO_START,
 	RN_SETTINGMODE_GYRO,
@@ -62,14 +62,14 @@ typedef enum{
 	RN_SETTING_WHITE,
 	RN_SETTING_GRAY_ZONE
 } RN_SETTINGMODE;
-
+*/
 
 /*
  *初期状態
  */
 
 RN_MODE runner_mode = RN_MODE_INIT;					/* NXTway-GS mode */
-RN_SETTINGMODE setting_mode = RN_SETTINGMODE_GYRO_START;/* キャリブレーションの状態 */
+//RN_SETTINGMODE setting_mode = RN_SETTINGMODE_GYRO_START;/* キャリブレーションの状態 */
 
 
 /*
@@ -88,7 +88,7 @@ S8	pwm_l, pwm_r;
 	
 /*
  * キャリブレーション用のプライベート関数
- */
+ 
 void RN_setting();
 void RN_set_gyro_start();
 void RN_set_gyro();
@@ -98,6 +98,7 @@ void RN_set_ok_end();
 void RN_set_color_black();
 void RN_set_color_white();
 void RN_set_color_gray();
+*/
 
 /*
  * ロボット制御用のプライベート関数
@@ -188,7 +189,7 @@ TASK(ActionTask)
 
 	switch (runner_mode){
 		case (RN_MODE_INIT):
-			//ecrobot_sound_tone(880, 512, 30);
+
 			RN_setting();
 
 		
@@ -403,12 +404,6 @@ void RN_set_gyro_end()
 
 void RN_set_color_black()
 {
-	/*if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE){
-		light_black=ecrobot_get_light_sensor(NXT_PORT_S3);
-		ecrobot_sound_tone(880, 512, 30);
-		systick_wait_ms(500);
-		setting_mode = RN_SETTING_WHITE;
-	}*/
 		if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE)
 		{
 			ecrobot_sound_tone(906, 512, 30);
@@ -421,12 +416,6 @@ void RN_set_color_black()
 
 void RN_set_color_white()
 {
-	/*if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE){
-		light_white=ecrobot_get_light_sensor(NXT_PORT_S3);
-		ecrobot_sound_tone(880, 512, 30);
-		systick_wait_ms(500);
-		setting_mode = RN_SETTINGMODE_OK;
-	}*/
 
 		if(ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE)
 		{

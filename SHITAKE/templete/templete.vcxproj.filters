@@ -36,9 +36,6 @@
     <ClCompile Include="sample133.c">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Calibration.c">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="MoveDistance.c">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -54,11 +51,17 @@
     <ClCompile Include="logSend.c">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Calibration.c">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="LightSensorLPF.c">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="PID_controll.c">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Calibration.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="SelfLocation.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -75,6 +78,15 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="logSend.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Calibration.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="LightSensorLPF.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="PID_controll.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
