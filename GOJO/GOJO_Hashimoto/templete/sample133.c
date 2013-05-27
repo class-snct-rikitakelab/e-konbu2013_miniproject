@@ -6,16 +6,7 @@
  * All rights reserved
  */
 
-
-
-
-
 #include "sample133.h"
-
-/*
- * 閾値
-*/
-#define LIGHT_THRESHOLD 600
 
 /*
  * システム全体の状態
@@ -24,7 +15,6 @@ typedef enum{
 	RN_MODE_INIT, 		/* system initialize mode */
 	RN_MODE_CONTROL		/* control mode */
 } RN_MODE;
-
 
 /*
  * キャリブレーションの状態
@@ -40,11 +30,8 @@ typedef enum{
 	RN_CAL_WHITE
 } RN_SETTINGMODE;
 
-
-
 static int black,white;
 static int slope_sound_frag = 0;
-
 
 /*
  *初期状態
@@ -61,12 +48,10 @@ static U32	gyro_offset = 0;    /* gyro sensor offset value */
 static U32	avg_cnt = 0;		/* average count to calc gyro offset */
 static U32	cal_start_time;		/* calibration start time */
 
-
 /* バランスコントロールへ渡すコマンド用変数 */
 S8  cmd_forward, cmd_turn;
 /* バランスコントロールから返されるモータ制御用変数 */
 S8	pwm_l, pwm_r;
-	
 	
 /*
  * キャリブレーション用のプライベート関数
@@ -81,8 +66,6 @@ void RN_gyro();
 void RN_cal_black();
 void RN_cal_white();
 
-
-
 /*
  * ロボット制御用のプライベート関数
  */
@@ -93,7 +76,6 @@ int RN_move();
  */
 DeclareCounter(SysTimerCnt);
 
-
 /*
  *タスクの宣言
  */
@@ -101,12 +83,10 @@ DeclareTask(ActionTask);
 DeclareTask(ActionTask2);
 DeclareTask(DisplayTask);
 
-
 /*
  *液晶ディスプレイに表示するシステム名設定
  */
 const char target_subsystem_name[] = "OSEK Sample133";
-
 
 /*
  *初期処理
@@ -116,7 +96,6 @@ void ecrobot_device_initialize(void)
 	ecrobot_set_light_sensor_active(NXT_PORT_S2);
 
 }
-
 
 /*
  *後始末処理
@@ -128,7 +107,6 @@ void ecrobot_device_terminate(void)
 	ecrobot_set_light_sensor_inactive(NXT_PORT_S2);
 }
 
-
 /*--------------------------------------------------------------------------*/
 /* OSEK hooks                                                               */
 /*--------------------------------------------------------------------------*/
@@ -137,7 +115,6 @@ void ShutdownHook(StatusType ercd){}
 void PreTaskHook(void){}
 void PostTaskHook(void){}
 void ErrorHook(StatusType ercd){}
-
 
 /*--------------------------------------------------------------------------*/
 /* Function to be invoked from a category 2 interrupt                       */
@@ -152,7 +129,6 @@ void user_1ms_isr_type2(void){
 		ShutdownOS( ercd );
 	}
 }
-
 
 /*
  *タスク1用の関数
@@ -192,7 +168,6 @@ TASK(ActionTask)
 	TerminateTask();
 }
 
-
 /*
  *表示用の関数
  */
@@ -207,8 +182,6 @@ TASK(DisplayTask)
 	TerminateTask();
 }
 
-
-
 /*
  *タスク1用の関数
  */
@@ -217,25 +190,19 @@ TASK(ActionTask2)
 
 	static const float Kp = 0.7;
 	static float hensa = 0;
-//	static float speed = 0;
 	static float kido_average;
 	static int crash_frag = 0;
 	static int wheel_turn;
 	static int mahha_frag = 0;
 
-	if(crash_frag == 0)
-	{
-		cmd_forward = 30;
-	}else{
-		cmd_forward = 100;
-	}
-
+	if((mahha_frag == 0) && (crash_frag == 0))
+	cmd_forward = 20;
 
 	kido_average = (black + white)/2;
 	
 	hensa = kido_average - ecrobot_get_light_sensor(NXT_PORT_S2);
-	/* 白いと＋値 */
-	/* 黒いと－値 */
+	/* センサは白いと低い値 */
+	/* 黒いと高い値を返す */
 
 	cmd_turn = Kp*hensa;
 
@@ -245,28 +212,35 @@ TASK(ActionTask2)
 		cmd_turn = 100;
 	}
 
-	if((ecrobot_get_gyro_sensor(NXT_PORT_S1) > 700) && (slope_sound_frag == 1))
+	if((ecrobot_get_gyro_sensor(NXT_PORT_S1) > 650) && (slope_sound_frag == 1) && (crash_frag == 0))
 	{
-		ecrobot_sound_tone(880, 512, 30);
+		ecrobot_sound_tone(880, 128, 15);
 		crash_frag = 1;
-		cmd_forward = -15;
+		cmd_forward = -20;
 		wheel_turn = nxt_motor_get_count(NXT_PORT_B);
 	}
 
-	if((nxt_motor_get_count(NXT_PORT_B) < wheel_turn - 180) && (nxt_motor_get_count(NXT_PORT_B) > wheel_turn - 720) && (crash_frag == 1))
+	if((nxt_motor_get_count(NXT_PORT_B) < wheel_turn - 90) && (nxt_motor_get_count(NXT_PORT_B) > wheel_turn - 720) && (crash_frag == 1))
 	{
-		ecrobot_sound_tone(980, 512, 30);
-		cmd_forward = 50;
+		ecrobot_sound_tone(980, 256, 10);
+		cmd_forward = 75;
 		mahha_frag = 1;
 	}
 
 	if((mahha_frag == 1) && (ecrobot_get_gyro_sensor(NXT_PORT_S1) > 700))
 	{
-		ecrobot_sound_tone(780, 512, 30);
-		cmd_forward = 30;
+		ecrobot_sound_tone(680, 512, 15);
+		cmd_forward = 20;
+		wheel_turn = nxt_motor_get_count(NXT_PORT_B);
+	}
+
+	if((nxt_motor_get_count(NXT_PORT_B) > wheel_turn + 90) && (mahha_frag == 1))
+	{
 		mahha_frag = 0;
 		crash_frag = 0;
 	}
+
+
 
 	/* 自タスクの終了 */
 	/* 具体的には，自タスクを実行状態から休止状態に移行させ，*/
