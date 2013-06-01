@@ -17,7 +17,8 @@ TARGET_SOURCES := \
 	logSend.c \
 	mymath.c \
 	SelfLocation.c \
-	sample133.c
+	sample133.c \
+	Section.c
 	#MoveDistanceTest.c \
 	
 TOPPERS_OSEK_OIL_SOURCE := ./prog.oil

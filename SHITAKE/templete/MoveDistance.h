@@ -26,7 +26,7 @@ int MoveDistance_detect_move_distance();
 //このクラスからしか呼ばれないprivateな関数
 
 //現在のモータ回転角を保存
-static void MoveDistance_reset_move_distance_measurement();
+ void MoveDistance_reset_move_distance_measurement();
 
 
 #endif

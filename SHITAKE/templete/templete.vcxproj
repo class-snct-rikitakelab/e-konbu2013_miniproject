@@ -59,6 +59,7 @@
     <ClCompile Include="MoveDistanceTest.c" />
     <ClCompile Include="mymath.c" />
     <ClCompile Include="sample133.c" />
+    <ClCompile Include="Section.c" />
     <ClCompile Include="SelfLocation.c" />
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +69,7 @@
     <ClInclude Include="MoveDistance.h" />
     <ClInclude Include="mymath.h" />
     <ClInclude Include="sample133.h" />
+    <ClInclude Include="Section.h" />
     <ClInclude Include="SelfLocation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

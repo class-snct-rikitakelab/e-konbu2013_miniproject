@@ -22,7 +22,7 @@ void MoveDistance_create()
 	 revR_buf=0;
 }
 
-static void MoveDistance_reset_move_distance_measurement()
+ void MoveDistance_reset_move_distance_measurement()
 {
 	revL_buf=nxt_motor_get_count(NXT_PORT_C);
 	revR_buf=nxt_motor_get_count(NXT_PORT_B);

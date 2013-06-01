@@ -7,7 +7,7 @@
  */
 
 #include "sample133.h"
-#include "MoveDistance.h"
+#include "Section.h"
 #include "Factory.h"
 
 
@@ -211,9 +211,6 @@ TASK(ActionTask)
 				&pwm_r);
 				nxt_motor_set_speed(NXT_PORT_C, pwm_l, 1);
 				nxt_motor_set_speed(NXT_PORT_B, pwm_r, 1);	
-			//尻尾用
-			//nxt_motor_set_speed(NXT_PORT_C,cmd_forward + cmd_turn/2,1);
-			//nxt_motor_set_speed(NXT_PORT_B,cmd_forward - cmd_turn/2,1);
 			break;
 
 		default:
@@ -249,37 +246,20 @@ TASK(ActionTask2)
 	self_location();
 
 
-	//position
-	if(position_x>2 || position_x<-2){
-		ecrobot_sound_tone(880, 512, 30);
-		flg_location=1;
-	}
 	
 	static int light_sensor=0,light_sensor_backup=0;
 
 	light_sensor=ecrobot_get_light_sensor(NXT_PORT_S3);
 
 
-	cmd_forward = 20;
+	cmd_forward = 30;
 	
-	//color_gray=(light_white + light_black)/2;
-	
-	/*
-	if(ecrobot_get_light_sensor(NXT_PORT_S3)>=500 && ecrobot_get_light_sensor(NXT_PORT_S3)<=565){
-		color_gray-=50;
-		ecrobot_sound_tone(880, 512, 30);
-		flg_gray=1;
-	}*/
+
 
 	/*平滑化*/
 	light_sensor=(light_sensor+light_sensor_backup)/2;
+	 hensa = (color_gray) - light_sensor;
 
-	if(light_sensor >= (gray_zone-10) && light_sensor <= (gray_zone+10))
-		hensa = gray_zone - light_sensor;
-	else hensa = (color_gray) - light_sensor;
-	//hensa = LIGHT_THRESHOLD - ecrobot_get_light_sensor(NXT_PORT_S3);
-	/* white value +*/
-	/* black value -*/
 
 	if(hensa>45)hensa=45;
 	if(hensa<-45)hensa=-45;
@@ -312,13 +292,10 @@ TASK(ActionTask2)
 		cmd_turn = 100;
 	}
 
-	/*if(flg_gray==1){
-		color_gray+=50;
-		flg_gray=0;
-	}*/
-
-	//RA_linetrace_S();
 	light_sensor_backup=light_sensor;
+
+
+	section_devide();
 
 	TerminateTask();
 }
@@ -328,7 +305,7 @@ TASK(LogTask)
 	position_x=getXCoo();
 	position_y=getYCoo();
 
-	logSend(0,0,position_x,position_y,flg_location,0,0,0);		//ログ取り
+	logSend(0,0,position_x,position_y,getDistance(),0,0,0);		//ログ取り
 	
 	TerminateTask();
 }
@@ -516,8 +493,7 @@ void RN_set_ok()
 	/* スタート位置にロボットを置き、バンパを押すと次の状態に遷移する。 */
 	if (ecrobot_get_touch_sensor(NXT_PORT_S4) == TRUE) {
 		ecrobot_sound_tone(880, 512, 30);
-		color_gray=(light_white*0.5)+(light_black*0.5);
-		gray_zone=(light_white*0.5)+(gray_zone*0.5);
+		color_gray=(light_white*0.7)+(light_black*0.3);
 		setting_mode = RN_SETTINGMODE_OK_END;
 	}
 }
