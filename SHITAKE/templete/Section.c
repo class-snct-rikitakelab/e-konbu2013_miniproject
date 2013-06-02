@@ -3,54 +3,36 @@
 #include "kernel.h"
 #include "kernel_id.h"
 #include "ecrobot_interface.h"
+#include "stdlib.h"
 
 static enum sample_course_section sample_sections;
+static struct sample_course_sections *current_section;
 
 
 void create_sample_corse_sections(){
+	struct sample_course_sections *p = (struct sample_course_sections*)malloc(sizeof(struct sample_course_sections));
+	p->name = SEC1;
+	p->section_length = SEC1_LENGTH;
+	p->next_section = (struct sample_course_sections*)malloc(sizeof(struct sample_course_sections));
+	
+	current_section = p;
+
+	p = current_section->next_section ;
+	p->name = SEC2;
+	p->section_length = SEC2_LENGTH;
+	p->next_section = (struct sample_course_sections*)malloc(sizeof(struct sample_course_sections));
+	
+
 
 
 }
 void section_devide(void){
 	
+	if(reach_next_section(current_section->section_length)){
+		//‰¹–Â‚ç‚·
+		current_section = get_next_section(current_section);
+	}
 	
-
-	switch(sample_sections) {
-	
-	case SEC1:
-		if(reach_next_section(SEC1_LENGTH)){
-			sample_sections = SEC2;
-		}
-		break;
-	case SEC2:
-			if(reach_next_section(SEC2_LENGTH)){
-			sample_sections = SEC3;
-		}
-		break;
-	case SEC3:
-			if(reach_next_section(SEC3_LENGTH)){
-			sample_sections = SEC4;
-		}
-		break;
-	case SEC4:
-			if(reach_next_section(SEC4_LENGTH)){
-				
-			sample_sections = SEC5;
-		}
-		break;
-	case SEC5:
-			if(reach_next_section(SEC5_LENGTH)){
-			sample_sections = SEC6;
-		}
-		break;
-	case SEC6:
-			if(reach_next_section(SEC6_LENGTH)){
-			sample_sections = SEC1;
-		}
-	break;
-	
-	};
-
 }
 int reach_next_section(float section_length){
 
@@ -63,4 +45,7 @@ int reach_next_section(float section_length){
 		return 0;
 	}
 }
-		
+
+static struct sample_course_sections* get_next_section(struct sample_course_sections *current_section){
+	return current_section->next_section;
+}
