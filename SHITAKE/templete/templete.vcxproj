@@ -54,20 +54,24 @@
   <ItemGroup>
     <ClCompile Include="balancer_param.c" />
     <ClCompile Include="Calibration.c" />
+    <ClCompile Include="CurvatureDetecter.c" />
     <ClCompile Include="logSend.c" />
     <ClCompile Include="MoveDistance.c" />
     <ClCompile Include="MoveDistanceTest.c" />
     <ClCompile Include="mymath.c" />
+    <ClCompile Include="PIDControl.c" />
     <ClCompile Include="sample133.c" />
     <ClCompile Include="Section.c" />
     <ClCompile Include="SelfLocation.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Calibration.h" />
+    <ClInclude Include="CurvatureDetecter.h" />
     <ClInclude Include="factory.h" />
     <ClInclude Include="logSend.h" />
     <ClInclude Include="MoveDistance.h" />
     <ClInclude Include="mymath.h" />
+    <ClInclude Include="PIDControl.h" />
     <ClInclude Include="sample133.h" />
     <ClInclude Include="Section.h" />
     <ClInclude Include="SelfLocation.h" />

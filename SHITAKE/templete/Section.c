@@ -6,7 +6,6 @@
 
 static enum sample_course_section sample_sections;
 
-
 void create_sample_corse_sections(){
 
 

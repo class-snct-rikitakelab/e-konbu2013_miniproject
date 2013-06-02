@@ -18,7 +18,9 @@ TARGET_SOURCES := \
 	mymath.c \
 	SelfLocation.c \
 	sample133.c \
-	Section.c
+	Section.c \
+	CurvatureDetecter.c \
+	PIDControl.c
 	#MoveDistanceTest.c \
 	
 TOPPERS_OSEK_OIL_SOURCE := ./prog.oil
