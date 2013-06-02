@@ -252,7 +252,7 @@ TASK(ActionTask2)
 	light_sensor=ecrobot_get_light_sensor(NXT_PORT_S3);
 
 
-	cmd_forward = 30;
+	cmd_forward = 20;
 	
 
 

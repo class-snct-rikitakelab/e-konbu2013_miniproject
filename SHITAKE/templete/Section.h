@@ -1,15 +1,14 @@
 #ifndef _Section_
 #define _Section_
 
-#define SEC1_LENGTH 40.0
-#define SEC2_LENGTH 37.8
-//#define SEC2_LENGTH 35.8
-#define SEC3_LENGTH 40.0
+#define SEC1_LENGTH 42.0
+#define SEC2_LENGTH 35.8
+#define SEC3_LENGTH 42.0
 #define SEC4_LENGTH 71.6
 #define SEC5_LENGTH 22.6
 #define SEC6_LENGTH 71.6
 
-enum sample_course_section{
+typedef enum sample_course_section{
 	SEC1,
 	SEC2,
 	SEC3,

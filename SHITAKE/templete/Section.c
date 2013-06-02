@@ -6,8 +6,15 @@
 
 static enum sample_course_section sample_sections;
 
+
+void create_sample_corse_sections(){
+
+
+}
 void section_devide(void){
 	
+	
+
 	switch(sample_sections) {
 	
 	case SEC1:
@@ -47,7 +54,7 @@ void section_devide(void){
 }
 int reach_next_section(float section_length){
 
-	if(section_length <  MoveDistance_detect_move_distance()){
+	if(section_length  <  MoveDistance_detect_move_distance()){
 		MoveDistance_reset_move_distance_measurement();
 		ecrobot_sound_tone(440,30,30);
 		return 1;
