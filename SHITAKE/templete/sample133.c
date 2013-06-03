@@ -138,7 +138,7 @@ void ecrobot_device_initialize(void)
 	ecrobot_set_motor_rev(NXT_PORT_C,0);
 
 	ecrobot_init_bt_slave("LEJOS-OSEK");
-
+	create_sample_corse_sections();
 	//ƒƒO’l‰Šú‰»
 	resetSelfLocation();
 }
