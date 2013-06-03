@@ -20,27 +20,33 @@ void create_sample_corse_sections(){
 	sec1.name=SEC1;
 	sec1.next_section = &sec2;
 	sec1.section_length = SEC1_LENGTH;
-
+	sec1.R  = SEC1_R;
+	
 	sec2.name=SEC2;
 	sec2.next_section = &sec3;
 	sec2.section_length = SEC2_LENGTH;
-
+	sec2.R  = SEC2_R;
+	
 	sec3.name=SEC3;
 	sec3.next_section = &sec4;
 	sec3.section_length = SEC3_LENGTH;
-
+	sec3.R  = SEC2_R;
+	
 	sec4.name=SEC4;
 	sec4.next_section = &sec5;
 	sec4.section_length = SEC4_LENGTH;
-
+	sec4.R  = SEC4_R;
+	
 	sec5.name=SEC5;
 	sec5.next_section = &sec6;
 	sec5.section_length = SEC5_LENGTH;
-
+	sec5.R  = SEC5_R;
+	
 	sec6.name=SEC6;
 	sec6.next_section = &sec1;
 	sec6.section_length = SEC6_LENGTH;
-
+	sec6.R  = SEC6_R;
+	
 }
 void section_devide(void){
 	
@@ -64,4 +70,8 @@ int reach_next_section(float section_length){
 
 static struct sample_course_sections* get_next_section(struct sample_course_sections *current_section){
 	return current_section->next_section;
+}
+
+float get_current_section_R(){
+
 }
