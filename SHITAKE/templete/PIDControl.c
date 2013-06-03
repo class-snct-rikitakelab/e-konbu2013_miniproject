@@ -4,11 +4,11 @@
 static float RKp=1.2,RKi=0,RKd=0.03;
 
 
-int curvature_PID_control(float target_R)
+int curvature_PID_control(float target_R,float current_R)
 {
 	static float bf_dev = 0.0;
 
-	float dev =  getCurvature() - target_R;
+	float dev =  current_R - target_R;
 	float i_dev = i_dev + (dev * 0.004);
 	float d_dev = (dev - bf_dev) / 0.004;
 	bf_dev = dev;
