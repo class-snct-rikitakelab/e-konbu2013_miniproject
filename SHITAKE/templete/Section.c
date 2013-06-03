@@ -7,23 +7,40 @@
 
 static enum sample_course_section sample_sections;
 static struct sample_course_sections *current_section;
+static struct sample_course_sections sec1;
+static struct sample_course_sections sec2;
+static struct sample_course_sections sec3;
+static struct sample_course_sections sec4;
+static struct sample_course_sections sec5;
+static struct sample_course_sections sec6;
 
 
 void create_sample_corse_sections(){
-	struct sample_course_sections *p = (struct sample_course_sections*)malloc(sizeof(struct sample_course_sections));
-	p->name = SEC1;
-	p->section_length = SEC1_LENGTH;
-	p->next_section = (struct sample_course_sections*)malloc(sizeof(struct sample_course_sections));
-	
-	current_section = p;
+	current_section = &sec1;
 
-	p = current_section->next_section ;
-	p->name = SEC2;
-	p->section_length = SEC2_LENGTH;
-	p->next_section = (struct sample_course_sections*)malloc(sizeof(struct sample_course_sections));
-	
+	sec1.name=SEC1;
+	sec1.next_section = &sec2;
+	sec1.section_length = SEC1_LENGTH;
 
+	sec2.name=SEC2;
+	sec2.next_section = &sec3;
+	sec2.section_length = SEC2_LENGTH;
 
+	sec3.name=SEC3;
+	sec3.next_section = &sec4;
+	sec3.section_length = SEC3_LENGTH;
+
+	sec4.name=SEC4;
+	sec4.next_section = &sec5;
+	sec4.section_length = SEC4_LENGTH;
+
+	sec5.name=SEC5;
+	sec5.next_section = &sec6;
+	sec5.section_length = SEC5_LENGTH;
+
+	sec6.name=SEC6;
+	sec6.next_section = &sec1;
+	sec6.section_length = SEC6_LENGTH;
 
 }
 void section_devide(void){
