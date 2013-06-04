@@ -1,7 +1,15 @@
 #include "CurvatureDetecter.h"
 
 
-void calcCurvature(){
+/* 自己位置同定用変数 */
+static float x_r = 0;		//車体のX座標
+static float y_r = 0;		//車体のY座標
+
+static float theta = 0;		//車体の角度
+static float R = 0;			//曲率半径
+
+
+void calc_curvature(){
 	
 	float fi_l = (float)nxt_motor_get_count(NXT_PORT_C);
 	float fi_r = (float)nxt_motor_get_count(NXT_PORT_B);
@@ -25,7 +33,7 @@ void calcCurvature(){
 	theta_t = theta;
 }
 
-float getCurvature(){
+float get_curvature(){
 	return R;
 }
 

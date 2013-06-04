@@ -29,16 +29,16 @@ int curvature_PID_control(float target_R,float current_R)
 
 
 int light_PID_control(float target_bright){
-	static int light_sensor=0,light_sensor_backup=0;
+	static int brightness=0,brightness_buf=0;
 	float hensa;
 
-	light_sensor=ecrobot_get_light_sensor(NXT_PORT_S3);
+	brightness=ecrobot_get_light_sensor(NXT_PORT_S3);
 
 		/*•½ŠŠ‰»*/
-	light_sensor=(light_sensor+light_sensor_backup)/2;
-	 hensa = target_bright - light_sensor;
+	brightness=(brightness+brightness_buf)/2;
+	 hensa = target_bright - brightness;
 	
-	 if(hensa>45)hensa=45;
+	if(hensa>45)hensa=45;
 	if(hensa<-45)hensa=-45;
 
 	
@@ -59,7 +59,7 @@ int light_PID_control(float target_bright){
 		turn = 100;
 	}
 
-	light_sensor_backup=light_sensor;
+	brightness_buf=brightness;
 
 	return turn;
 

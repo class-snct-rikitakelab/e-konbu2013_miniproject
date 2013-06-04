@@ -12,17 +12,9 @@
 
 #define CIRCUMFERENCE	25.8	//車輪の円周
 
-/* 自己位置同定用変数 */
-static float x_r = 0;		//車体のX座標
-static float y_r = 0;		//車体のY座標
 
-static float theta = 0;		//車体の角度
-static float R = 0;			//曲率半径
-
-
-
-void calcCurvature();
-float getCurvature();
+void calc_curvature();
+float get_curvature();
 
 
 #endif

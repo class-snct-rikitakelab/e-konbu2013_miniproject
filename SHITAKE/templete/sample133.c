@@ -10,6 +10,7 @@
 #include "Section.h"
 #include "Factory.h"
 #include "PIDControl.h"
+#include "CurvatureDetecter.h"
 
 
 
@@ -244,8 +245,10 @@ TASK(DisplayTask)
 TASK(ActionTask2)
 {
 	self_location();
+	calc_curvature();
+
 	cmd_forward = 20;
-	cmd_turn = light_PID_control(color_gray) + curvature_PID_control(get_current_section_R());	
+	cmd_turn = light_PID_control(color_gray) + curvature_PID_control(get_current_section_R(),get_curvature());	
 	section_devide();
 	TerminateTask();
 }
