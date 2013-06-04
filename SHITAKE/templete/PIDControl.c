@@ -5,7 +5,6 @@ static float RKp=1.2,RKi=0,RKd=0.03;
 static const float Kp =	9.0;		//0.38;
 static const float Ki =	0.0	;	//0.06;
 static const float Kd =	5.0	;	//0.0027;
-static const float b = 0;
 
 
 int curvature_PID_control(float target_R,float current_R)
@@ -51,7 +50,7 @@ int light_PID_control(float target_bright){
 	d_hensa = (bf_hensa - hensa )/0.004;
 	bf_hensa = hensa;
 
-	S8 turn = Kp*hensa + Ki*i_hensa + Kd*d_hensa + b;
+	S8 turn = Kp*hensa + Ki*i_hensa + Kd*d_hensa;
 
 	if (turn < -100) {
 		turn = -100;

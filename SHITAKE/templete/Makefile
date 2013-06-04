@@ -20,7 +20,8 @@ TARGET_SOURCES := \
 	sample133.c \
 	Section.c \
 	CurvatureDetecter.c \
-	PIDControl.c
+	PIDControl.c \
+	BrightnessLPF.c
 	#MoveDistanceTest.c \
 	
 TOPPERS_OSEK_OIL_SOURCE := ./prog.oil
