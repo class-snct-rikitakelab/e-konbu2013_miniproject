@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="balancer_param.c" />
+    <ClCompile Include="BrightnessLPF.c" />
     <ClCompile Include="Calibration.c" />
     <ClCompile Include="CurvatureDetecter.c" />
     <ClCompile Include="logSend.c" />
@@ -65,6 +66,7 @@
     <ClCompile Include="SelfLocation.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BrightnessLPF.h" />
     <ClInclude Include="Calibration.h" />
     <ClInclude Include="CurvatureDetecter.h" />
     <ClInclude Include="factory.h" />
