@@ -1,5 +1,6 @@
 #include "PIDControl.h"
 #include "CurvatureDetecter.h"
+#include "BrightnessLPF.h"
 
 static float RKp=1.2,RKi=0,RKd=0.03;
 static const float Kp =	9.0;		//0.38;
@@ -28,14 +29,10 @@ int curvature_PID_control(float target_R,float current_R)
 
 
 int light_PID_control(float target_bright){
-	static int brightness=0,brightness_buf=0;
 	float hensa;
 
-	brightness=ecrobot_get_light_sensor(NXT_PORT_S3);
-
-		/*•½ŠŠ‰»*/
-	brightness=(brightness+brightness_buf)/2;
-	 hensa = target_bright - brightness;
+	hensa = target_bright - get_brightness_LPF();
+	//hensa = target_bright - brightness;
 	
 	if(hensa>45)hensa=45;
 	if(hensa<-45)hensa=-45;
@@ -57,8 +54,6 @@ int light_PID_control(float target_bright){
 	}else if (turn > 100) {
 		turn = 100;
 	}
-
-	brightness_buf=brightness;
 
 	return turn;
 

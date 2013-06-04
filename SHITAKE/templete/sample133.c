@@ -244,12 +244,14 @@ TASK(DisplayTask)
  */
 TASK(ActionTask2)
 {
+	int weight=0.5;
+	cmd_forward = 20;
+	
 	self_location();
 	calc_curvature();
-
-	cmd_forward = 20;
-	cmd_turn = light_PID_control(color_gray) + curvature_PID_control(get_current_section_R(),get_curvature());	
 	section_devide();
+	cmd_turn = (1-weight)* light_PID_control(color_gray) + weight*curvature_PID_control(get_current_section_R(),get_curvature());	
+
 	TerminateTask();
 }
 

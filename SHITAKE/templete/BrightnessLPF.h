@@ -2,6 +2,7 @@
 #define __BrightnessLPF
 
 #include "ecrobot_interface.h"
-S16 brightnessLPF();
+
+S16 get_brightness_LPF();
 
 #endif
