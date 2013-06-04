@@ -73,5 +73,5 @@ static struct sample_course_sections* get_next_section(struct sample_course_sect
 }
 
 float get_current_section_R(){
-
+	return current_section->R;
 }

@@ -9,7 +9,7 @@
 #include "sample133.h"
 #include "Section.h"
 #include "Factory.h"
-
+#include "PIDControl.h"
 
 
 
@@ -244,59 +244,9 @@ TASK(DisplayTask)
 TASK(ActionTask2)
 {
 	self_location();
-
-
-	
-	static int light_sensor=0,light_sensor_backup=0;
-
-	light_sensor=ecrobot_get_light_sensor(NXT_PORT_S3);
-
-
 	cmd_forward = 20;
-	
-
-
-	/*•½ŠŠ‰»*/
-	light_sensor=(light_sensor+light_sensor_backup)/2;
-	 hensa = (color_gray) - light_sensor;
-
-
-	if(hensa>45)hensa=45;
-	if(hensa<-45)hensa=-45;
-
-
-	static const float Kp =	9.0;		//0.38;
-	static const float Ki =	0.0	;	//0.06;
-	static const float Kd =	5.0	;	//0.0027;
-	static const float b = 0;
-
-	static float i_hensa = 0;
-	static float d_hensa = 0;
-	static float bf_hensa = 0;
-
-	/* ”’‚¢‚Æ{’l */
-	/* •‚¢‚Æ|’l */
-
-	//cmd_turn = Kp * hensa;
-
-	i_hensa = i_hensa + (hensa * 0.004);
-
-	d_hensa = (bf_hensa - hensa )/0.004;
-	bf_hensa = hensa;
-
-	cmd_turn = Kp*hensa + Ki*i_hensa + Kd*d_hensa + b;
-
-	if (cmd_turn < -100) {
-		cmd_turn = -100;
-	}else if (cmd_turn > 100) {
-		cmd_turn = 100;
-	}
-
-	light_sensor_backup=light_sensor;
-
-
+	cmd_turn = light_PID_control(color_gray) + curvature_PID_control(get_current_section_R());	
 	section_devide();
-
 	TerminateTask();
 }
 
