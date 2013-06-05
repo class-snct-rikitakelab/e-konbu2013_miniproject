@@ -1,19 +1,21 @@
 #ifndef _Section_
 #define _Section_
 
-#define SEC1_LENGTH 42.0
+#define SEC1_LENGTH 40.0
+//#define SEC1_LENGTH 42.0
 #define SEC2_LENGTH 35.8
+
 #define SEC3_LENGTH 42.0
 #define SEC4_LENGTH 71.6
 #define SEC5_LENGTH 22.6
 #define SEC6_LENGTH 71.6
 
 #define SEC1_R 0.0
-#define SEC2_R 22.2
+#define SEC2_R -26.2
 #define SEC3_R 0.0
-#define SEC4_R 22.2
-#define SEC5_R 22.2
-#define SEC6_R 22.2
+#define SEC4_R -22.2
+#define SEC5_R 27.2
+#define SEC6_R -22.2
 
 
 

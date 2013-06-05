@@ -30,7 +30,7 @@ void create_sample_corse_sections(){
 	sec3.name=SEC3;
 	sec3.next_section = &sec4;
 	sec3.section_length = SEC3_LENGTH;
-	sec3.R  = SEC2_R;
+	sec3.R  = SEC3_R;
 	
 	sec4.name=SEC4;
 	sec4.next_section = &sec5;

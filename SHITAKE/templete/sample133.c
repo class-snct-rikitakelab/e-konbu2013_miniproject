@@ -245,7 +245,7 @@ TASK(DisplayTask)
 TASK(ActionTask2)
 {
 	int weight=0.5;
-	cmd_forward = 20;
+	cmd_forward = 60;
 	
 	self_location();
 	calc_curvature();
@@ -260,7 +260,7 @@ TASK(LogTask)
 	position_x=getXCoo();
 	position_y=getYCoo();
 
-	logSend(0,0,position_x,position_y,getDistance(),0,0,0);		//ÉçÉOéÊÇË
+	logSend(0,0,position_x,position_y,get_curvature(),get_current_section_R(),0,0);		//ÉçÉOéÊÇË
 	
 	TerminateTask();
 }
