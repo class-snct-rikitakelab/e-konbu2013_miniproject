@@ -12,6 +12,7 @@
 #include "PIDControl.h"
 #include "CurvatureDetecter.h"
 
+#define PWM_HOSEI 0.981212 //Ç´ÇÒÇ¨ÇÂçÜ
 
 
 static float hensa = 0;
@@ -210,7 +211,8 @@ TASK(ActionTask)
 				(F32)ecrobot_get_battery_voltage(),
 				&pwm_l,
 				&pwm_r);
-				nxt_motor_set_speed(NXT_PORT_C, pwm_l, 1);
+
+				nxt_motor_set_speed(NXT_PORT_C, PWM_HOSEI*pwm_l, 1);
 				nxt_motor_set_speed(NXT_PORT_B, pwm_r, 1);	
 			break;
 
@@ -245,8 +247,9 @@ TASK(DisplayTask)
 TASK(ActionTask2)
 {
 	int weight=0.5;
-	cmd_forward = 60;
-	
+	cmd_forward = 40;
+
+
 	self_location();
 	calc_curvature();
 	section_devide();
