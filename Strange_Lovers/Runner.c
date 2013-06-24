@@ -29,6 +29,8 @@ void ecrobot_device_terminate(void){
 
 }
 
+
+
 TASK(ActionTask){
 
 	RN_mode_change();

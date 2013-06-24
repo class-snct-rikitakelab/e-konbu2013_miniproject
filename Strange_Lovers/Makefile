@@ -12,9 +12,9 @@ USER_LIB = nxtway_gs_balancer
 
 # User application source
 TARGET_SOURCES := \
-	Runner.c \
+	Runner.c	\
 	RN_State.c \
-	Balancer.c
+	Balancer.c 
 	
 TOPPERS_OSEK_OIL_SOURCE := ./prog.oil
 
