@@ -30,6 +30,29 @@ void ecrobot_device_terminate(void){
 }
 
 
+/*--------------------------------------------------------------------------*/
+/* OSEK hooks                                                               */
+/*--------------------------------------------------------------------------*/
+void StartupHook(void){}
+void ShutdownHook(StatusType ercd){}
+void PreTaskHook(void){}
+void PostTaskHook(void){}
+void ErrorHook(StatusType ercd){}
+
+
+/*--------------------------------------------------------------------------*/
+/* Function to be invoked from a category 2 interrupt                       */
+/*--------------------------------------------------------------------------*/
+void user_1ms_isr_type2(void){
+	StatusType ercd;
+	/*
+	 *  Increment OSEK Alarm System Timer Count
+     */
+	ercd = SignalCounter( SysTimerCnt );
+	if( ercd != E_OK ){
+		ShutdownOS( ercd );
+	}
+}
 
 TASK(ActionTask){
 

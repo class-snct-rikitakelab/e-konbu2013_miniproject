@@ -1,7 +1,7 @@
 # Target specific macros
-TARGET = Strange Lovers
+TARGET = Strange_Lovers
 
-NXTOSEK_ROOT = /cygdrive/c/cygwin/nxtOSEK
+NXTOSEK_ROOT =  /cygdrive/c/cygwin/nxtOSEK
 
 # nxtway_gs_balancer library desiged for NXTway-GS two wheeled self-balancing robot
 USER_INC_PATH= $(NXTOSEK_ROOT)/ecrobot/nxtway_gs_balancer
@@ -12,12 +12,14 @@ USER_LIB = nxtway_gs_balancer
 
 # User application source
 TARGET_SOURCES := \
-	Runner.c	\
+	balancer_param.c \
+	Runner.c \
 	RN_State.c \
 	Balancer.c 
-	
+
 TOPPERS_OSEK_OIL_SOURCE := ./prog.oil
 
 O_PATH ?= build
 
 include $(NXTOSEK_ROOT)/ecrobot/lejos_osek.tmf
+

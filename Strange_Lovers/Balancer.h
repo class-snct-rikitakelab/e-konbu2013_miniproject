@@ -1,10 +1,11 @@
-#ifndef _BALANCER_
-#define _BALANCER_
+#ifndef _BALANCER_H_
+#define _BALANCER_H_
 
 #include "kernel.h"
 #include "kernel_id.h"
 #include "ecrobot_interface.h"
-#include "balancer.h"
+//#include "balancer.h"
+#include "C:/cygwin/nxtOSEK\ecrobot/nxtway_gs_balancer/balancer.h"
 
 static S8 forward = 20;
 static S8 turn = 0;
