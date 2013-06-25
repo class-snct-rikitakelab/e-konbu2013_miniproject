@@ -67,13 +67,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Balancer.c" />
+    <ClCompile Include="PID_Brightness.c" />
     <ClCompile Include="RN_State.c" />
     <ClCompile Include="Runner.c" />
+    <ClCompile Include="Target_Value.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Balancer.h" />
+    <ClInclude Include="PID_Brightness.h" />
     <ClInclude Include="RN_State.h" />
     <ClInclude Include="Runner.h" />
+    <ClInclude Include="Target_Value.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

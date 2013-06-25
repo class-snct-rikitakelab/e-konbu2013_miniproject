@@ -15,7 +15,9 @@ TARGET_SOURCES := \
 	balancer_param.c \
 	Runner.c \
 	RN_State.c \
-	Balancer.c 
+	Balancer.c \
+	PID_Brightness.c \
+	Target_Value.c
 
 TOPPERS_OSEK_OIL_SOURCE := ./prog.oil
 

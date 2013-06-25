@@ -6,8 +6,9 @@
 #include "ecrobot_interface.h"
 #include "balancer.h"
 
-#include "Balancer.h"
+//#include "Balancer.h"
 #include "RN_State.h"
+#include "PID_Brightness.h"
 
 
 #endif
